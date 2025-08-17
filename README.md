@@ -163,7 +163,8 @@ We welcome contributions! Here's how you can help:
 - **Yanwen Zou** - 
 - **Zhaoye Zhou** -
 - **Zewei Ye** -
-- **Chenyang Shi** - 
+- **Chenyang Shi** -
+- **Jie Yi** - 
 - **Junda Huang** - 
 - **Gaotian Wang** - 
 
