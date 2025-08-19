@@ -118,6 +118,11 @@ class ArxTeleop:
             joints_rad[j] = np.deg2rad(master_angles_deg[j]) * self.scale[j] + self.offset_rad[j]
         
         joints_rad[4], joints_rad[5] = -joints_rad[5], joints_rad[4] #swap j5 and j6
+        # If you find that the direction of the robot arm is opposite to what you expected when controlling it
+        # you can modify it here:
+        # Example:
+        # joints_rad[3] = -joints_rad[3]
+
         return joints_rad
 
     def _map_gripper(self, master_angles_deg):
