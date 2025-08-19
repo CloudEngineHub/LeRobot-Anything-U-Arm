@@ -40,7 +40,7 @@
 
 ## 🎯 Overview
 
-LeRobot Everything is a **low-cost, universal, leader-follower teleoperation system** for any commercial robot arms and humanoid robots through four interchangeable hardware configurations. Designed for researchers, educators, and robotics enthusiasts, it provides a standardized interface for diverse robot platforms. This project focus on extending the Lerobot to control any real robot in both real scene and simulation.
+LeRobot Everything is a **low-cost, universal, leader-follower teleoperation system** for any commercial robot arms and humanoid robots(coming soon) through four interchangeable hardware configurations. Designed for researchers, educators, and robotics enthusiasts, it provides a standardized interface for diverse robot platforms. This project focus on extending the Lerobot to control any real robot in both real scene and simulation.
 
 ### 🎯 Target Environment (Docker coming soon)
 
@@ -61,7 +61,7 @@ LeRobot Everything is a **low-cost, universal, leader-follower teleoperation sys
 | 🛠️**Extensible**            | Simple API for adding new robot support                                       |
 | 💰**Cost-effective**          | Ultra low-cost hardware solution                                              |
 | 🎯**Optimized Hardware**      | Move smoothly and flexibly                                                    |
-| **💻Simulation Test**         | Test teleoperation in simulation environment                                  |
+| 💻**Simulation Test**         | Support teleoperation test in simulation environment                                  |
 
 ### 🎮 Ready-to-Use Examples
 
