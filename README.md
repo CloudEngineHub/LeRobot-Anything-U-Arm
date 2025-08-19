@@ -67,20 +67,27 @@ LeRobot Everything is a **low-cost, universal, leader-follower teleoperation sys
 
 **Real Robot Examples:**
 
-- **Dobot CR5** - Complete teleoperation setup
-- **xArm Series** - Full ROS integration
-- **ARX5** - ROS-free control example
+<p align="center">
+
+| Dobot CR5 | xArm Series | ARX5 |
+|-----------|-------------|------|
+| <img src="pics/Dobot.gif" width="200" alt="Dobot CR5 Real Robot" /> | <img src="pics/Xarm.gif" width="200" alt="xArm Series Real Robot" /> | <img src="pics/Arx.gif" width="200" alt="ARX5 Real Robot" /> |
+
+</p>
 
 **Simulation Examples:**
 
-- **SO100**
-- **XLeRobot**
-- **xArm Series**
-- **ARX 5**
-- **Franka Panda**
-- **Unitree H1** - Coming Soon
+<p align="center">
 
----
+| SO100 | ARX-X5 | XLeRobot |
+|-------|--------|----------|
+| <img src="pics/so100-sim.gif" width="200" alt="SO100 Simulation" /> | <img src="pics/arx-x5-sim.gif" width="200" alt="ARX-X5 Simulation" /> | <img src="pics/x_fetch-sim.gif" width="200" alt="XLeRobot Simulation" /> |
+
+| xArm Series | Franka Panda |
+|-------------|--------------|
+| <img src="pics/xarm6_robotiq-sim.gif" width="200" alt="xArm Series Simulation" /> | <img src="pics/panda-sim.gif" width="200" alt="Franka Panda Simulation" /> |
+
+</p> 
 
 ## 💵 Total Cost 💵
 
@@ -139,11 +146,11 @@ We're preparing comprehensive documentation including:
 
 ### 🎯 TO-DO List
 
-- [✅] **SAPIEN Simulation Environment**: Install and Play!
+- [X] **SAPIEN Simulation Environment**: Install and Play!
+
   - Virtual teleop setup mirroring physical hardware
   - Rapid prototyping and testing capabilities
   - Integration with existing SAPIEN workflows
-
 - [ ] **ROS2 Support**
 - [ ] **Docker Image**
 - [ ] **Humanoid System: Config4**
@@ -177,6 +184,7 @@ This project builds upon the excellent work of:
 - [LeRobot](https://github.com/huggingface/lerobot) - The foundation for robot learning
 - [SO-100/SO-101](https://github.com/TheRobotStudio/SO-ARM100) - Hardware inspiration
 - [XLeRobot](https://github.com/Vector-Wangel/XLeRobot) - Extended robot support
+- [Gello](https://github.com/wuphilipp/gello_mechanical/tree/main) - Hardware inspiration
 
 Thanks to all the talented contributors behind these detailed and professional projects!
 
