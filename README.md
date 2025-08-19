@@ -172,6 +172,7 @@ This project builds upon the excellent work of:
 - [LeRobot](https://github.com/huggingface/lerobot) - The foundation for robot learning
 - [SO-100/SO-101](https://github.com/TheRobotStudio/SO-ARM100) - Hardware inspiration
 - [XLeRobot](https://github.com/Vector-Wangel/XLeRobot) - Extended robot support
+- [Gello](https://github.com/wuphilipp/gello_mechanical/tree/main) - Hardware inspiration
 
 Thanks to all the talented contributors behind these detailed and professional projects!
 
