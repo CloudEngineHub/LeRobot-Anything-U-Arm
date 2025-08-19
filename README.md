@@ -18,7 +18,7 @@
 > **🚀 Bringing Leader-Follower teleoperation system to every real robot and robot arm -- Cheaper, Smoother, Plug-and-Play**
 > **💵 Starts from $60 cost!! Then controls any robot arm system!!**
 
-*Built upon the giants: [LeRobot](https://github.com/huggingface/lerobot), [SO-100/SO-101](https://github.com/TheRobotStudio/SO-ARM100), [XLeRobot](https://github.com/Vector-Wangel/XLeRobot#)*
+*Built upon the giants: [LeRobot](https://github.com/huggingface/lerobot), [SO-100/SO-101](https://github.com/TheRobotStudio/SO-ARM100), [XLeRobot](https://github.com/Vector-Wangel/XLeRobot#), [Gello](https://github.com/wuphilipp/gello_mechanical/tree/main)*
 
 # 📰 News
 
