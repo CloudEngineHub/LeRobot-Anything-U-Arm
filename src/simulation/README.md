@@ -15,6 +15,13 @@ simulation/
 
 ## 🚀 Quick Start
 
+### Notes
+
+You can skip this part if you've already installed the requirement with the following command. 
+```bash
+pip install -r overall_requirement.txt
+```
+
 ### Requirements
 
 - **Python**: 3.9+
