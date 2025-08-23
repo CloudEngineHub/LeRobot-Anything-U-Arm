@@ -119,10 +119,10 @@ LeRobot Everything is a **low-cost, universal, leader-follower teleoperation sys
 > If you are totally new to programming, please spend at least a day to get yourself familiar with basic Python, Ubuntu and GitHub (with the help of Google and AI). At least you should know how to set up Ubuntu system, git clone, pip install, use interpreters (VS Code, Cursor, PyCharm, etc.) and directly run commands in the terminals.
 
 1. 💵 **Buy your parts**: [Bill of Materials](https://docs.google.com/document/d/1TjhJOeJXsD5kmoYF-kuWfPju6WSUeSnivJiU7TH4vWs/edit?tab=t.0#heading=h.k991lzlarfb8)
-2. 🖨️ **Print your stuff**: [3D printing](https://github.com/yanwen-zou/UArm-Cross-Embodiment-Teleoperation/tree/main/mechanical)
+2. 🖨️ **Print your stuff**: [3D printing](https://github.com/MINT-SJTU/Lerobot-Everything-Cross-Embodiment-Teleoperation/tree/main/mechanical)
 3. 🔨 [**Assemble**!](Coming Soon)
 4. 🎮 **Simulation**: [Try it out in SAPIEN!](https://github.com/MINT-SJTU/Lerobot-Everything-Cross-Embodiment-Teleoperation/blob/feat/simulation/src/simulation/README.md)
-5. 💻 **Software**: [Get your robot moving!](https://github.com/yanwen-zou/UArm-Cross-Embodiment-Teleoperation/blob/main/howtoplay.md)
+5. 💻 **Software**: [Get your robot moving!](https://github.com/MINT-SJTU/Lerobot-Everything-Cross-Embodiment-Teleoperation/tree/main?tab=readme-ov-file#-quick-start)
 
 For detailed hardware guide, check  [Hardware Guide](https://docs.google.com/document/d/1TjhJOeJXsD5kmoYF-kuWfPju6WSUeSnivJiU7TH4vWs/edit?tab=t.0#heading=h.k991lzlarfb8)
 
