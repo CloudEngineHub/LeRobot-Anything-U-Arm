@@ -15,7 +15,7 @@ def send_command(ser, cmd):
     ser.write(cmd.encode('ascii'))
     time.sleep(0.01)
     response = ser.read_all()
-    print(f"Raw response (binary): {response}")  # 打印原始二进制响应
+    # print(f"Raw response (binary): {response}")  # 打印原始二进制响应
     return response.decode('ascii', errors='ignore')
 
 def pwm_to_angle(response_str, pwm_min=500, pwm_max=2500, angle_range=270):
