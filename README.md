@@ -122,7 +122,7 @@ LeRobot Everything is a **low-cost, universal, leader-follower teleoperation sys
 2. 🖨️ **Print your stuff**: [3D printing](https://github.com/MINT-SJTU/Lerobot-Everything-Cross-Embodiment-Teleoperation/tree/main/mechanical)
 3. 🔨 [**Assemble**!](Coming Soon)
 4. 🎮 **Simulation**: [Try it out in SAPIEN!](https://github.com/MINT-SJTU/Lerobot-Everything-Cross-Embodiment-Teleoperation/blob/feat/simulation/src/simulation/README.md)
-5. 💻 **Software**: [Get your robot moving!](https://github.com/MINT-SJTU/Lerobot-Everything-Cross-Embodiment-Teleoperation/tree/main?tab=readme-ov-file#-quick-start)
+5. 💻 **Software Env Set up**: [Get your robot moving!](https://github.com/MINT-SJTU/Lerobot-Everything-Cross-Embodiment-Teleoperation/tree/main?tab=readme-ov-file#-quick-start)
 
 For detailed hardware guide, check  [Hardware Guide](https://docs.google.com/document/d/1TjhJOeJXsD5kmoYF-kuWfPju6WSUeSnivJiU7TH4vWs/edit?tab=t.0#heading=h.k991lzlarfb8)
 
