@@ -13,7 +13,7 @@
 1. **Install Python Dependencies**
 
    ```sh
-   pip install -r overall_requirements.txt
+   pip install -r ros1_requirements.txt
    ```
 
 2. **Build Catkin Workspace**
