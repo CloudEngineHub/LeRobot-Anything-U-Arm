@@ -32,7 +32,7 @@
 
 ---
 
-# 🤖 Plug-and-Play with Real Robot
+# 🤖 Plug-and-Play with Real Robot with ROS1
 
 ## 1. Start ROS Core
 
