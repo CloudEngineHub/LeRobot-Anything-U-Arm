@@ -22,7 +22,7 @@
 
 # 📰 News
 
-- 2025-08-15: **LeRobot Everything 0.1.0** hardware setup, the 1st version fully capable for three major robot arm configurations in ROS1, starts from 60$.
+- 2025-08-15: **LeRobot Everything 0.1.0** hardware setup, the 1st version fully capable for three major robot arm configurations, starts from 60$.
 
 ---
 
@@ -173,8 +173,8 @@ We welcome contributions! Here's how you can help:
 
 - **Yanwen Zou** -
 - **Zhaoye Zhou** -
+- **Chenyang Shi**
 - **Zewei Ye** -
-- **Chenyang Shi** -
 - **Jie Yi** -
 - **Junda Huang** -
 - **Gaotian Wang** -
