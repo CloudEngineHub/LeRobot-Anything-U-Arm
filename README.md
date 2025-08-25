@@ -194,7 +194,7 @@ Thanks to all the talented contributors behind these detailed and professional p
 
 **Made with ❤️ for the robotics community**
 
-[![GitHub stars](https://img.shields.io/github/stars/yanwen-zou/UArm-Cross-Embodiment-Teleoperation?style=social)](https://github.com/yanwen-zou/UArm-Cross-Embodiment-Teleoperation)
-[![GitHub forks](https://img.shields.io/github/forks/yanwen-zou/UArm-Cross-Embodiment-Teleoperation?style=social)](https://github.com/yanwen-zou/UArm-Cross-Embodiment-Teleoperation)
+[![GitHub stars](https://img.shields.io/github/stars/MINT-SJTU/Lerobot-Everything-Cross-Embodiment-Teleoperation?style=social)](https://github.com/yanwen-zou/UArm-Cross-Embodiment-Teleoperation)
+[![GitHub forks](https://img.shields.io/github/forks/MINT-SJTU/Lerobot-Everything-Cross-Embodiment-Teleoperation?style=social)](https://github.com/yanwen-zou/UArm-Cross-Embodiment-Teleoperation)
 
 </div>
