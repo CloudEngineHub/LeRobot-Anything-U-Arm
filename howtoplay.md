@@ -3,7 +3,7 @@
 ## Prerequisites
 
 - **Ubuntu 20.04**
-- **ROS Noetic**
+- [**ROS Noetic**](https://wiki.ros.org/noetic/Installation/Ubuntu)
 - **Python 3.9+**
 
 ---
