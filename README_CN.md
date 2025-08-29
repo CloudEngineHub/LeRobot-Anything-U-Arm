@@ -95,9 +95,9 @@ LeRobot Anything 是一个面向任意商用机械臂与人形机器人的**低�
 
 | 配置 | 兼容机械臂 | 状态 |
 |---------------|----------------------|---------|
-| [**Config 1**](https://github.com/yanwen-zou/UArm-Cross-Embodiment-Teleoperation/tree/main/mechanical/Config1_STL) | Xarm7、Fanuc LR Mate 200iD、Trossen ALOHA、Agile PiPER、Realman RM65B、KUKA LBR iiSY Cobot | ✅ 可用 |
-| [**Config 2**](https://github.com/yanwen-zou/UArm-Cross-Embodiment-Teleoperation/tree/main/mechanical/Config2_STL) | Dobot CR5、UR5、ARX R5*、AUBO i5、JAKA Zu7 | ✅ 可用 |
-| [**Config 3**](https://github.com/yanwen-zou/UArm-Cross-Embodiment-Teleoperation/tree/main/mechanical/Config3_STL) | Franka FR3、Franka Emika Panda、Flexiv Rizon、Realman RM75B | ✅ 可用 |
+| [**Config 1**](https://github.com/MINT-SJTU/LeRobot-Anything-U-Arm/tree/main/mechanical/Config1_STL) | Xarm7、Fanuc LR Mate 200iD、Trossen ALOHA、Agile PiPER、Realman RM65B、KUKA LBR iiSY Cobot | ✅ 可用 |
+| [**Config 2**](https://github.com/MINT-SJTU/LeRobot-Anything-U-Arm/tree/main/mechanical/Config2_STL) | Dobot CR5、UR5、ARX R5*、AUBO i5、JAKA Zu7 | ✅ 可用 |
+| [**Config 3**](https://github.com/MINT-SJTU/LeRobot-Anything-U-Arm/tree/main/mechanical/Config3_STL) | Franka FR3、Franka Emika Panda、Flexiv Rizon、Realman RM75B | ✅ 可用 |
 
 > 💡 **需要支持其他机器人？** 查看我们的[贡献](#-贡献)部分！
 
@@ -109,9 +109,9 @@ LeRobot Anything 是一个面向任意商用机械臂与人形机器人的**低�
 > 如果你完全是编程新手，请至少花一天时间熟悉基础的 Python、Ubuntu 和 GitHub（借助 Google 与 AI）。至少需要了解如何安装 Ubuntu、git clone、pip install、使用解释器（VS Code、Cursor、PyCharm 等），以及在终端中直接运行命令。
 
 1. 💵 **购买零件**：[材料清单（BOM）](https://docs.google.com/document/d/1TjhJOeJXsD5kmoYF-kuWfPju6WSUeSnivJiU7TH4vWs/edit?tab=t.0#heading=h.k991lzlarfb8)
-2. 🖨️ **打印部件**：[3D 打印](https://github.com/yanwen-zou/UArm-Cross-Embodiment-Teleoperation/tree/main/mechanical)
+2. 🖨️ **打印部件**：[3D 打印](https://github.com/MINT-SJTU/LeRobot-Anything-U-Arm/tree/main/mechanical)
 3. 🔨 [**装配**！](Coming Soon)
-4. 💻 **软件**：[让你的机器人动起来！](https://github.com/yanwen-zou/UArm-Cross-Embodiment-Teleoperation/blob/main/howtoplay.md)
+4. 💻 **软件**：[让你的机器人动起来！](https://github.com/MINT-SJTU/LeRobot-Anything-U-Arm/blob/main/howtoplay.md)
    
 详尽硬件指南请查看：[硬件指南](https://docs.google.com/document/d/1TjhJOeJXsD5kmoYF-kuWfPju6WSUeSnivJiU7TH4vWs/edit?tab=t.0#heading=h.k991lzlarfb8)
 
@@ -181,8 +181,8 @@ LeRobot Anything 是一个面向任意商用机械臂与人形机器人的**低�
 
 **以 ❤️ 献给机器人社区**
 
-[![GitHub stars](https://img.shields.io/github/stars/yanwen-zou/UArm-Cross-Embodiment-Teleoperation?style=social)](https://github.com/yanwen-zou/UArm-Cross-Embodiment-Teleoperation)
-[![GitHub forks](https://img.shields.io/github/forks/yanwen-zou/UArm-Cross-Embodiment-Teleoperation?style=social)](https://github.com/yanwen-zou/UArm-Cross-Embodiment-Teleoperation)
+[![GitHub stars](https://img.shields.io/github/stars/MINT-SJTU/LeRobot-Anything-U-Arm?style=social)](https://github.com/MINT-SJTU/LeRobot-Anything-U-Arm)
+[![GitHub forks](https://img.shields.io/github/forks/MINT-SJTU/LeRobot-Anything-U-Arm?style=social)](https://github.com/MINT-SJTU/LeRobot-Anything-U-Arm)
 
 </div>
 

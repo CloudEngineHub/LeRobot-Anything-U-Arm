@@ -105,9 +105,9 @@ LeRobot Anything is a **low-cost, universal, leader-follower teleoperation syste
 
 | Configuration                                                                                                         | Compatible Robot Arms                                                                      | Status   |
 | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | -------- |
-| [**Config 1**](https://github.com/yanwen-zou/UArm-Cross-Embodiment-Teleoperation/tree/main/mechanical/Config1_STL) | Xarm6, Fanuc LR Mate 200iD, Trossen ALOHA, Agile PiPER, Realman RM65B, KUKA LBR iiSY Cobot | ✅ Ready |
-| [**Config 2**](https://github.com/yanwen-zou/UArm-Cross-Embodiment-Teleoperation/tree/main/mechanical/Config2_STL) | Dobot CR5, UR5, ARX R5*, AUBO i5, JAKA Zu7                                                 | ✅ Ready |
-| [**Config 3**](https://github.com/yanwen-zou/UArm-Cross-Embodiment-Teleoperation/tree/main/mechanical/Config3_STL) | Franka FR3, Franka Emika Panda, Flexiv Rizon, Realman RM75B , Xarm7                               | ✅ Ready |
+| [**Config 1**](https://github.com/MINT-SJTU/LeRobot-Anything-U-Arm/tree/main/mechanical/Config1_STL) | Xarm6, Fanuc LR Mate 200iD, Trossen ALOHA, Agile PiPER, Realman RM65B, KUKA LBR iiSY Cobot | ✅ Ready |
+| [**Config 2**](https://github.com/MINT-SJTU/LeRobot-Anything-U-Arm/tree/main/mechanical/Config2_STL) | Dobot CR5, UR5, ARX R5*, AUBO i5, JAKA Zu7                                                 | ✅ Ready |
+| [**Config 3**](https://github.com/MINT-SJTU/LeRobot-Anything-U-Arm/tree/main/mechanical/Config3_STL) | Franka FR3, Franka Emika Panda, Flexiv Rizon, Realman RM75B , Xarm7                               | ✅ Ready |
 
 > 💡 **Need support for a different robot?** Check our [Contributing](#-contributing) section!
 
@@ -119,10 +119,10 @@ LeRobot Anything is a **low-cost, universal, leader-follower teleoperation syste
 > If you are totally new to programming, please spend at least a day to get yourself familiar with basic Python, Ubuntu and GitHub (with the help of Google and AI). At least you should know how to set up Ubuntu system, git clone, pip install, use interpreters (VS Code, Cursor, PyCharm, etc.) and directly run commands in the terminals.
 
 1. 💵 **Buy your parts**: [Bill of Materials](https://docs.google.com/document/d/1TjhJOeJXsD5kmoYF-kuWfPju6WSUeSnivJiU7TH4vWs/edit?tab=t.0#heading=h.k991lzlarfb8)
-2. 🖨️ **Print your stuff**: [3D printing](https://github.com/MINT-SJTU/Lerobot-Anything-Uarm/tree/main/mechanical)
+2. 🖨️ **Print your stuff**: [3D printing](https://github.com/MINT-SJTU/Lerobot-Anything-U-arm/tree/main/mechanical)
 3. 🔨 [**Assemble**!](Coming Soon)
-4. 💻 **Software Env Set up & Real-world Teleop**: [Get your robot moving!](https://github.com/MINT-SJTU/Lerobot-Anything-Uarm/blob/main/howtoplay.md)
-5. 🎮 **Simulation**: [Try it out in SAPIEN!](https://github.com/MINT-SJTU/Lerobot-Anything-Uarm/blob/feat/simulation/src/simulation/README.md)
+4. 💻 **Software Env Set up & Real-world Teleop**: [Get your robot moving!](https://github.com/MINT-SJTU/Lerobot-Anything-U-arm/blob/main/howtoplay.md)
+5. 🎮 **Simulation**: [Try it out in SAPIEN!](https://github.com/MINT-SJTU/Lerobot-Anything-U-arm/blob/feat/simulation/src/simulation/README.md)
 
 For detailed hardware guide, check  [Hardware Guide](https://docs.google.com/document/d/1TjhJOeJXsD5kmoYF-kuWfPju6WSUeSnivJiU7TH4vWs/edit?tab=t.0#heading=h.k991lzlarfb8)
 
@@ -194,7 +194,7 @@ Thanks to all the talented contributors behind these detailed and professional p
 
 **Made with ❤️ for the robotics community**
 
-[![GitHub stars](https://img.shields.io/github/stars/MINT-SJTU/Lerobot-Anything-Uarm?style=social)](https://github.com/yanwen-zou/UArm-Cross-Embodiment-Teleoperation)
-[![GitHub forks](https://img.shields.io/github/forks/MINT-SJTU/Lerobot-Anything-Uarm?style=social)](https://github.com/yanwen-zou/UArm-Cross-Embodiment-Teleoperation)
+[![GitHub stars](https://img.shields.io/github/stars/MINT-SJTU/Lerobot-Anything-U-arm?style=social)](https://github.com/MINT-SJTU/LeRobot-Anything-U-Arm)
+[![GitHub forks](https://img.shields.io/github/forks/MINT-SJTU/Lerobot-Anything-U-arm?style=social)](https://github.com/MINT-SJTU/LeRobot-Anything-U-Arm)
 
 </div>
