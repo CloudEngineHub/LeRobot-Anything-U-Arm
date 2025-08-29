@@ -39,6 +39,9 @@ class StaticRobotViewer:
             robot_uids=robot_uids,
             render_mode="human",
             control_mode=self.control_mode,
+            sensor_configs=dict(shader_pack="rt-fast"),
+            human_render_camera_configs=dict(shader_pack="rt-fast"),
+            viewer_camera_configs=dict(shader_pack="rt-fast"),
         )
         
         # 获取动作空间信息
@@ -233,13 +236,13 @@ def main():
         '--robot', '-r', 
         type=str, 
         default='so100',
-        choices=['arx-x5', 'so100', 'xarm6_robotiq', 'panda', 'x_fetch', 'unitree_h1', 'piper','widowx250s'],
+        choices=['arx-x5', 'so100', 'xarm6_robotiq', 'panda', 'x_fetch', 'unitree_h1'],
         help='选择要显示的机械臂类型'
     )
     parser.add_argument(
         '--scene', '-s', 
         type=str, 
-        default='Empty-v1',
+        default='ReplicaCAD_SceneManipulation-v1',
         help='仿真场景名称'
     )
     parser.add_argument(

@@ -9,6 +9,7 @@ from queue import Queue, Empty
 import torch
 import sapien
 import argparse
+from mani_skill.utils import sapien_utils
 
 
 class ServoTeleoperatorSim: 
@@ -49,8 +50,8 @@ class ServoTeleoperatorSim:
         # 根据机器人类型选择控制模式
         if robot_uids == "x_fetch": 
             self.control_mode = "pd_joint_pos_dual_arm"
-        # elif robot_uids == "unitree_h1":
-        #     self.control_mode = "pd_joint_delta_pos"  # H1使用增量控制更稳定
+        elif robot_uids == "unitree_h1":
+            self.control_mode = "pd_joint_pos"
         else: 
             self.control_mode = "pd_joint_pos"
 
@@ -60,6 +61,16 @@ class ServoTeleoperatorSim:
             robot_uids=robot_uids,
             render_mode="human",
             control_mode=self.control_mode,
+            sensor_configs=dict(shader_pack="rt-fast"),
+            human_render_camera_configs=dict(shader_pack="rt-fast"),
+            viewer_camera_configs=dict(shader_pack="rt-fast"),
+            sim_config=dict(
+                default_materials_config=dict(
+                    static_friction=10.0,  # 静摩擦
+                    dynamic_friction=10.0, # 动摩擦
+                    restitution=0.0       # 反弹系数
+                )
+            ),
         )
         obs, _ = self.env.reset(seed=0)
         print("Action space:", self.env.action_space)
@@ -81,7 +92,27 @@ class ServoTeleoperatorSim:
             args=(self.teleop_sim_handler,), 
             daemon=True
         )
-    
+
+        self._setup_camera_pose()
+
+
+    def _setup_camera_pose(self):
+        agent = getattr(self.env.unwrapped, "agent", None)
+        pose = sapien.Pose()
+        if agent is not None:
+            pose = agent.robot.get_pose()  # 返回 sapien.Pose
+            print(f"机器人初始位置: {pose}")
+        camera_pose = sapien_utils.look_at(
+            [0.0, -1.5, 1.7], pose.p
+        )
+        camera_viewer = getattr(self.env.unwrapped, "viewer", None)
+        if camera_viewer is not None:
+            print(camera_pose)
+            camera_pose_arr = camera_pose.raw_pose.squeeze().cpu().numpy()
+            camera_position = camera_pose_arr[:3]
+            camera_quaternion = camera_pose_arr[3:]
+            camera_viewer.set_camera_pose(sapien.Pose(camera_position, camera_quaternion))
+
     def _setup_h1_standing_pose(self):
         """为H1机器人设置初始站立姿态"""
         try:
@@ -89,9 +120,21 @@ class ServoTeleoperatorSim:
             if agent is not None:
                 # 使用H1预定义的站立姿态
                 standing_keyframe = agent.keyframes["standing"]
-                agent.reset(standing_keyframe.qpos)
-                agent.robot.set_root_pose(standing_keyframe.pose)
-                print("H1 已设置为站立姿态")
+                
+                # 检查qpos的维度
+                if hasattr(standing_keyframe.qpos, '__len__') and len(standing_keyframe.qpos) >= 19:
+                    agent.reset(standing_keyframe.qpos)
+                    agent.robot.set_root_pose(standing_keyframe.pose)
+                    print("H1 已设置为站立姿态")
+                else:
+                    print("警告: standing_keyframe.qpos维度不正确，使用默认站立姿态")
+                    # 使用默认的站立姿态
+                    default_standing = np.array([
+                        0, 0, 0, 0, 0, 0, 0, -0.4, -0.4, 0.0, 0.0, 0.8, 0.8, 0.0, 0.0, -0.4, -0.4, 0.0, 0.0
+                    ])
+                    agent.reset(default_standing)
+                    agent.robot.set_root_pose(standing_keyframe.pose)
+                    print("H1 已设置为默认站立姿态")
         except Exception as e:
             print(f"设置 H1 站立姿态失败: {e}")
     
@@ -169,12 +212,12 @@ class ServoTeleoperatorSim:
         except Empty:
             return None
     
-    def angle_to_gripper(self, angle_deg: float, pos_min: float, pos_max: float, 
+    def angle_to_gripper(self, angle_rad: float, pos_min: float, pos_max: float, 
                         angle_range: float = 1.5 * np.pi) -> float:
         """将舵机角度映射到夹爪位置
         
         Args:
-            angle_deg: 舵机角度（弧度）
+            angle_rad: 舵机角度（弧度）
             pos_min: 夹爪最小位置
             pos_max: 夹爪最大位置
             angle_range: 舵机角度范围
@@ -182,7 +225,7 @@ class ServoTeleoperatorSim:
         Returns:
             夹爪位置值
         """
-        ratio = max(0, 1 - (angle_deg / angle_range))
+        ratio = max(0, 1 - (angle_rad / angle_range))
         position = pos_min + (pos_max - pos_min) * ratio
         return float(np.clip(position, pos_min, pos_max))
 
@@ -201,20 +244,25 @@ class ServoTeleoperatorSim:
             action = np.array(pose)
             # 处理夹爪：最后一维映射到夹爪位置
             action[-1] = self.angle_to_gripper(action[-1], 0, 0.044)
-            # 复制夹爪值（双指夹爪）
             action = np.concatenate([action, [action[-1]]])
-            # 调整关节方向
+
             action[2] = -action[2]
             action[4], action[5] = -action[5], -action[4]  # 交换关节4和5
+        
+        elif self.robot_uids == "piper":  # 6轴机械臂 + 双指夹爪
+            action = np.array(pose)
+            action[-1] = self.angle_to_gripper(action[-1], 0, 0.04)
+
+            action = np.concatenate([action, [action[-1]]])
+            action[3], action[4] = action[4], -action[3]  # 交换关节4和5
 
         elif self.robot_uids == "so100":  # 5轴机械臂
             pose_copy = pose.copy()
             pose_copy.pop(5)  # 移除第6维（so100只有5轴）
             action = np.array(pose_copy)
             action[-1] = self.angle_to_gripper(action[-1], -1.1, 1.1)
-            # 调整关节方向
+            
             action[0] = -action[0]
-            # action[1] = -action[1]
             action[3] = -action[3]
             action[4] = -action[4]
 
@@ -239,8 +287,8 @@ class ServoTeleoperatorSim:
             action = np.array(pose_copy)
             action[-1] = self.angle_to_gripper(action[-1], -1.1, 1.1)
             # 调整关节方向
-            # action[1] = -action[1]
-            action[2] = -action[2]
+            action[0] = -action[0]
+            action[1] = -action[1]
             action[3] = -action[3]
             action[4] = -action[4]
             # 构建双臂动作
@@ -249,33 +297,36 @@ class ServoTeleoperatorSim:
             right_arm_action[0] = -right_arm_action[0]
             right_arm_action[-2] = -right_arm_action[-2]
             # 组合：左臂关节 + 右臂关节 + 左右夹爪 + 底盘运动（0）
+            zero_action = np.zeros(6)
             action = np.concatenate([
                 left_arm_action[0:-1], 
                 right_arm_action[0:-1], 
                 [left_arm_action[-1], right_arm_action[-1]], 
-                np.zeros(4)  # 底盘不动
+                np.zeros(4) 
             ])
 
+        elif self.robot_uids == "widowx250s":  # 6轴机械臂 + 双指夹爪
+            action = np.array(pose)
+            action[-1] = self.angle_to_gripper(action[-1], 0, 0.04)
+            action = np.concatenate([action, [action[-1]]])
+            action[3], action[4] = action[4], -action[3] 
+        
         elif self.robot_uids == "unitree_h1":  # 人形机器人
-            # 7维舵机输入 → 19维人形机器人动作（增量控制）
             raw = np.array(pose, dtype=np.float32)
             action = np.zeros(19, dtype=np.float32)
 
             # 只修改手臂关节的增量（相对于当前状态）
             # 左臂：shoulder_pitch, shoulder_roll, shoulder_yaw, elbow
-            action[5] = raw[0] * 0.1   # left_shoulder_pitch 增量
-            action[9] = raw[1] * 0.1   # left_shoulder_roll 增量
-            action[13] = raw[2] * 0.1  # left_shoulder_yaw 增量
-            action[17] = raw[3] * 0.1  # left_elbow 增量
+            action[5] = raw[0]  # left_shoulder_pitch 增量
+            action[9] = raw[1]   # left_shoulder_roll 增量
+            action[13] = raw[2]  # left_shoulder_yaw 增量
+            action[17] = raw[3]  # left_elbow 增量
 
             # 右臂：shoulder_pitch, shoulder_roll, shoulder_yaw, elbow
-            action[6] = raw[4] * 0.1   # right_shoulder_pitch 增量
-            action[10] = raw[5] * 0.1  # right_shoulder_roll 增量
-            action[14] = raw[6] * 0.1  # right_shoulder_yaw 增量
-            action[18] = raw[3] * 0.1  # right_elbow 增量（复用第4个舵机）
-
-            # 其他关节保持0（不移动，维持站立姿态）
-            # 增量控制范围在 [-0.2, 0.2] 内，使用0.1作为缩放因子
+            action[6] = raw[4]   # right_shoulder_pitch 增量
+            action[10] = raw[5]  # right_shoulder_roll 增量
+            action[14] = raw[6]  # right_shoulder_yaw 增量
+            action[18] = raw[3]  # right_elbow 增量（复用第4个舵机）
 
         else: 
             raise ValueError(f"不支持的机械臂类型: {self.robot_uids}")
@@ -296,14 +347,10 @@ class ServoTeleoperatorSim:
         if self.env is None or action is None:
             return
             
-        if self.robot_uids == "unitree_h1":
-            self.env.render()
-            time.sleep(dwell)
-            return
-        else: 
-            self.env.step(action)
-            self.env.render()
-            time.sleep(dwell)
+        # 所有机器人类型都执行动作
+        self.env.step(action)
+        self.env.render()
+        time.sleep(dwell)
     
     def angle_stream_loop(self, on_send):
         """角度数据生产者线程：周期性读取舵机角度
@@ -410,13 +457,13 @@ if __name__ == "__main__":
         '--robot', '-r', 
         type=str, 
         default='so100',
-        choices=['arx-x5', 'so100', 'xarm6_robotiq', 'panda', 'x_fetch', 'unitree_h1'],
+        choices=['arx-x5', 'so100', 'xarm6_robotiq', 'panda', 'x_fetch', 'piper', 'widowx250s'],
         help='选择要控制的机械臂类型'
     )
     parser.add_argument(
         '--scene', '-s', 
         type=str, 
-        default='Empty-v1',
+        default='ReplicaCAD_SceneManipulation-v1',
         help='仿真场景名称'
     )
     parser.add_argument(
