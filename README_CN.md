@@ -1,4 +1,4 @@
-# 🤖 Lerobot Everything
+# 🤖 Lerobot Anything
 
 [![en](https://img.shields.io/badge/lang-en-blue.svg)](README.md)
 [![中文](https://img.shields.io/badge/lang-中文-brown.svg)](README_CN.md)
@@ -28,7 +28,7 @@
 # 📰 动态 
 
 
-- 2025-08-15: **LeRobot Everything 0.1.0** 硬件搭建，首个版本在 ROS1 中完整支持三种主流机械臂配置，成本从 60 美元起。
+- 2025-08-15: **LeRobot Anything 0.1.0** 硬件搭建，首个版本在 ROS1 中完整支持三种主流机械臂配置，成本从 60 美元起。
 
 ---
 
@@ -46,7 +46,7 @@
 
 ## 🎯 概览
 
-LeRobot Everything 是一个面向任意商用机械臂与人形机器人的**低成本、通用型主从式遥操作系统**，通过四种可互换的硬件配置实现。它为研究者、教育者和机器人爱好者设计，提供面向多样机器人平台的标准化接口。本项目专注于扩展 Lerobot，以便在真实场景与仿真中控制任何真实机器人。
+LeRobot Anything 是一个面向任意商用机械臂与人形机器人的**低成本、通用型主从式遥操作系统**，通过四种可互换的硬件配置实现。它为研究者、教育者和机器人爱好者设计，提供面向多样机器人平台的标准化接口。本项目专注于扩展 Lerobot，以便在真实场景与仿真中控制任何真实机器人。
 
 ### 🎯 目标环境（Docker 即将推出）
 - **OS**: Ubuntu 20.04

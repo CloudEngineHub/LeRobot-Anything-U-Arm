@@ -1,4 +1,4 @@
-# 🤖 Lerobot Everything
+# 🤖 Lerobot Anything
 
 [![en](https://img.shields.io/badge/lang-en-blue.svg)](README.md)
 [![中文](https://img.shields.io/badge/lang-中文-brown.svg)](README_CN.md)
@@ -22,7 +22,7 @@
 
 # 📰 News
 
-- 2025-08-15: **LeRobot Everything 0.1.0** hardware setup, the 1st version fully capable for three major robot arm configurations, starts from 60$.
+- 2025-08-15: **LeRobot Anything 0.1.0** hardware setup, the 1st version fully capable for three major robot arm configurations, starts from 60$.
 
 ---
 
@@ -40,7 +40,7 @@
 
 ## 🎯 Overview
 
-LeRobot Everything is a **low-cost, universal, leader-follower teleoperation system** for any commercial robot arms and humanoid robots(coming soon) through four interchangeable hardware configurations. Designed for researchers, educators, and robotics enthusiasts, it provides a standardized interface for diverse robot platforms. This project focus on extending the Lerobot to control any real robot in both real scene and simulation.
+LeRobot Anything is a **low-cost, universal, leader-follower teleoperation system** for any commercial robot arms and humanoid robots(coming soon) through four interchangeable hardware configurations. Designed for researchers, educators, and robotics enthusiasts, it provides a standardized interface for diverse robot platforms. This project focus on extending the Lerobot to control any real robot in both real scene and simulation.
 
 ### 🎯 Target Environment (Docker coming soon)
 
@@ -119,10 +119,10 @@ LeRobot Everything is a **low-cost, universal, leader-follower teleoperation sys
 > If you are totally new to programming, please spend at least a day to get yourself familiar with basic Python, Ubuntu and GitHub (with the help of Google and AI). At least you should know how to set up Ubuntu system, git clone, pip install, use interpreters (VS Code, Cursor, PyCharm, etc.) and directly run commands in the terminals.
 
 1. 💵 **Buy your parts**: [Bill of Materials](https://docs.google.com/document/d/1TjhJOeJXsD5kmoYF-kuWfPju6WSUeSnivJiU7TH4vWs/edit?tab=t.0#heading=h.k991lzlarfb8)
-2. 🖨️ **Print your stuff**: [3D printing](https://github.com/MINT-SJTU/Lerobot-Everything-Cross-Embodiment-Teleoperation/tree/main/mechanical)
+2. 🖨️ **Print your stuff**: [3D printing](https://github.com/MINT-SJTU/Lerobot-Anything-Uarm/tree/main/mechanical)
 3. 🔨 [**Assemble**!](Coming Soon)
-4. 💻 **Software Env Set up & Real-world Teleop**: [Get your robot moving!](https://github.com/MINT-SJTU/Lerobot-Everything-Cross-Embodiment-Teleoperation/blob/main/howtoplay.md)
-5. 🎮 **Simulation**: [Try it out in SAPIEN!](https://github.com/MINT-SJTU/Lerobot-Everything-Cross-Embodiment-Teleoperation/blob/feat/simulation/src/simulation/README.md)
+4. 💻 **Software Env Set up & Real-world Teleop**: [Get your robot moving!](https://github.com/MINT-SJTU/Lerobot-Anything-Uarm/blob/main/howtoplay.md)
+5. 🎮 **Simulation**: [Try it out in SAPIEN!](https://github.com/MINT-SJTU/Lerobot-Anything-Uarm/blob/feat/simulation/src/simulation/README.md)
 
 For detailed hardware guide, check  [Hardware Guide](https://docs.google.com/document/d/1TjhJOeJXsD5kmoYF-kuWfPju6WSUeSnivJiU7TH4vWs/edit?tab=t.0#heading=h.k991lzlarfb8)
 
@@ -194,7 +194,7 @@ Thanks to all the talented contributors behind these detailed and professional p
 
 **Made with ❤️ for the robotics community**
 
-[![GitHub stars](https://img.shields.io/github/stars/MINT-SJTU/Lerobot-Everything-Cross-Embodiment-Teleoperation?style=social)](https://github.com/yanwen-zou/UArm-Cross-Embodiment-Teleoperation)
-[![GitHub forks](https://img.shields.io/github/forks/MINT-SJTU/Lerobot-Everything-Cross-Embodiment-Teleoperation?style=social)](https://github.com/yanwen-zou/UArm-Cross-Embodiment-Teleoperation)
+[![GitHub stars](https://img.shields.io/github/stars/MINT-SJTU/Lerobot-Anything-Uarm?style=social)](https://github.com/yanwen-zou/UArm-Cross-Embodiment-Teleoperation)
+[![GitHub forks](https://img.shields.io/github/forks/MINT-SJTU/Lerobot-Anything-Uarm?style=social)](https://github.com/yanwen-zou/UArm-Cross-Embodiment-Teleoperation)
 
 </div>

@@ -81,4 +81,4 @@ Choose your robot and run the corresponding script:
 # 🖥️ Try It Out in Simulation
 
 If you do not have robot hardware, you can try teleoperation in simulation.  
-See detailed guidance [here](https://github.com/MINT-SJTU/Lerobot-Everything-Cross-Embodiment-Teleoperation/blob/feat/simulation/src/simulation/README.md).
+See detailed guidance [here](https://github.com/MINT-SJTU/Lerobot-Anything-Uarm/blob/feat/simulation/src/simulation/README.md).

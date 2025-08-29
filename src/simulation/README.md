@@ -1,6 +1,6 @@
-# 🤖 LeRobot Everything - Simulation Environment User Guide
+# 🤖 LeRobot Anything - Simulation Environment User Guide
 
-This directory contains simulation environment code for the LeRobot Everything project, supporting simulation control and teleoperation for various robot arms, which is developed based on [ManiSkill](https://github.com/haosulab/ManiSkill).
+This directory contains simulation environment code for the LeRobot Anything project, supporting simulation control and teleoperation for various robot arms, which is developed based on [ManiSkill](https://github.com/haosulab/ManiSkill).
 
 ## 📁 File Structure
 
