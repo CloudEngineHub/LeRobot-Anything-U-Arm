@@ -14,6 +14,7 @@ from .inspire_hand import (
 )
 from .koch import *
 from .panda import *
+from .piper import Piper
 from .so100 import *
 from .stompy import Stompy
 from .trifingerpro import TriFingerPro

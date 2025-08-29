@@ -39,6 +39,13 @@ class ReplicaCADSceneBuilder(SceneBuilder):
         p=[-1, 0, 0.02]
     )  # generally a safe initial spawn pose for the Fetch robot
 
+    manipulation_pose = sapien.Pose(
+        p=[0.8, -1.5, 0.95], 
+        # p=[-0.52, -1.5, 0.95], xfetch
+        q=[0, 0, 0, 1]
+        # q=[0.707, 0, 0, -0.707]
+    )
+
     builds_lighting = True  # we set this true because the ReplicaCAD dataset defines some lighting for us so we don't need the default option from ManiSkill
 
     # build configs for RCAD are string file names
@@ -318,8 +325,12 @@ class ReplicaCADSceneBuilder(SceneBuilder):
         if self.env.robot_uids == "fetch":
             self.env.agent.reset(self.env.agent.keyframes["rest"].qpos)
             self.env.agent.robot.set_pose(sapien.Pose([-1, 0, 0.02]))
+        elif self.env.robot_uids == "x_fetch":
+            self.env.agent.reset(self.env.agent.keyframes["rest"].qpos)
+            self.env.agent.robot.set_pose(sapien.Pose([0.225, -0.57, 0.2]))
         else:
-            raise NotImplementedError(self.env.robot_uids)
+            self.env.agent.robot.set_pose(self.manipulation_pose)
+            # raise NotImplementedError(self.env.robot_uids)
 
     def disable_fetch_move_collisions(
         self,
