@@ -122,7 +122,7 @@ LeRobot Anything is a **low-cost, universal, leader-follower teleoperation syste
 2. 🖨️ **Print your stuff**: [3D printing](https://github.com/MINT-SJTU/Lerobot-Anything-Uarm/tree/main/mechanical)
 3. 🔨 [**Assemble**!](Coming Soon)
 4. 💻 **Software Env Set up & Real-world Teleop**: [Get your robot moving!](https://github.com/MINT-SJTU/Lerobot-Anything-Uarm/blob/main/howtoplay.md)
-5. 🎮 **Simulation**: [Try it out in SAPIEN!](https://github.com/MINT-SJTU/Lerobot-Anything-Uarm/blob/feat/simulation/src/simulation/README.md)
+5. 🎮 **Simulation**: [Try it out in SAPIEN!](https://github.com/MINT-SJTU/Lerobot-Anything-Uarm/blob/main/src/simulation/README.md)
 
 For detailed hardware guide, check  [Hardware Guide](https://docs.google.com/document/d/1TjhJOeJXsD5kmoYF-kuWfPju6WSUeSnivJiU7TH4vWs/edit?tab=t.0#heading=h.k991lzlarfb8)
 
