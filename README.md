@@ -83,9 +83,9 @@ LeRobot Anything is a **low-cost, universal, leader-follower teleoperation syste
 |-------|--------|----------|
 | <img src="pics/so100-sim.gif" width="200" alt="SO100 Simulation" /> | <img src="pics/arx-x5-sim.gif" width="200" alt="ARX-X5 Simulation" /> | <img src="pics/x_fetch-sim.gif" width="200" alt="XLeRobot Simulation" /> |
 
-| xArm Series | Franka Panda |
-|-------------|--------------|
-| <img src="pics/xarm6_robotiq-sim.gif" width="200" alt="xArm Series Simulation" /> | <img src="pics/panda-sim.gif" width="200" alt="Franka Panda Simulation" /> |
+| xArm Series | Franka Panda | Piper |
+|-------------|--------------|-------------|
+| <img src="pics/xarm6_robotiq-sim.gif" width="200" alt="xArm Series Simulation" /> | <img src="pics/panda-sim.gif" width="200" alt="Franka Panda Simulation" /> | <img src="pics/piper-sim.gif" width="200" alt="Piper Simulation" /> |
 
 </p> 
 
@@ -121,8 +121,8 @@ LeRobot Anything is a **low-cost, universal, leader-follower teleoperation syste
 1. 💵 **Buy your parts**: [Bill of Materials](https://docs.google.com/document/d/1TjhJOeJXsD5kmoYF-kuWfPju6WSUeSnivJiU7TH4vWs/edit?tab=t.0#heading=h.k991lzlarfb8)
 2. 🖨️ **Print your stuff**: [3D printing](https://github.com/MINT-SJTU/Lerobot-Anything-U-arm/tree/main/mechanical)
 3. 🔨 [**Assemble**!](Coming Soon)
-4. 💻 **Software Env Set up & Real-world Teleop**: [Get your robot moving!](https://github.com/MINT-SJTU/Lerobot-Anything-U-arm/blob/main/howtoplay.md)
-5. 🎮 **Simulation**: [Try it out in SAPIEN!](https://github.com/MINT-SJTU/Lerobot-Anything-U-arm/blob/feat/simulation/src/simulation/README.md)
+4. 💻 **Software Env Set up & Real-world Teleop**: [Get your robot moving!](https://github.com/MINT-SJTU/Lerobot-Anything-Uarm/blob/main/howtoplay.md)
+5. 🎮 **Simulation**: [Try it out in SAPIEN!](https://github.com/MINT-SJTU/Lerobot-Anything-U-arm/blob/main/src/simulation/README.md)
 
 For detailed hardware guide, check  [Hardware Guide](https://docs.google.com/document/d/1TjhJOeJXsD5kmoYF-kuWfPju6WSUeSnivJiU7TH4vWs/edit?tab=t.0#heading=h.k991lzlarfb8)
 
