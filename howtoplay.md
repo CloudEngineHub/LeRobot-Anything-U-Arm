@@ -13,17 +13,23 @@
 1. **Install Python Dependencies**
 
    ```sh
-   pip install -r ros1_requirements.txt
+   # install both ros1 and simulation requirements
+   pip install -r overall_requirements.txt 
+   ```
+   
+   If your system doesn't support ROS1, you can install the dependencies without ROS1 with the following command which supports simulation teleoperation and check [this note](https://github.com/MINT-SJTU/Lerobot-Anything-U-arm/blob/main/src/simulation/README.md) . 
+   ```sh
+   pip install -r requirements.txt
    ```
 
-2. **Build Catkin Workspace**
+3. **Build Catkin Workspace**
 
    ```sh
    catkin_make
    source devel/setup.bash
    ```
 
-3. **Verify Installation**
+4. **Verify Installation**
 
    ```sh
    # Test if ROS can find the package
