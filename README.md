@@ -169,15 +169,15 @@ We welcome contributions! Here's how you can help:
 
 ---
 
-## 👥 Main Contributors
+## 👥 Contributors
 
-- **Yanwen Zou** -
-- **Zhaoye Zhou** -
-- **Chenyang Shi**
-- **Zewei Ye** -
-- **Jie Yi** -
-- **Junda Huang** -
-- **Gaotian Wang** -
+- **Yanwen Zou** - Hardware&Software System Design
+- **Zhaoye Zhou** - Hareware Assemble and Adjustment
+- **Chenyang Shi** - SAPIEN and website setup
+- **Zewei Ye** - Implement Experiment
+- **Jie Yi** - Implement Experiment
+- **Junda Huang** - Idea Discussion and website setup
+- **Gaotian Wang** - Idea Discussion
 
 This project builds upon the excellent work of:
 
