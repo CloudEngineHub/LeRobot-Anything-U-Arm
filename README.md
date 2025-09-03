@@ -55,7 +55,7 @@ LeRobot Anything is a **low-cost, universal, leader-follower teleoperation syste
 | ----------------------------------- | ----------------------------------------------------------------------------- |
 | 🔄**Universal Compatibility** | Four teleop configurations covering **most (95%) commercial robot arms** |
 | 📡**ROS Integration**         | Native ROS1 support with `/servo_angles` topic publishing                   |
-| 🎮**Real-time Control**       | Low-latency servo angle transmission                                          |
+| 🎮**Real-time Control**       | Low-latency joint-space control                                        |
 | 🔌**Plug & Play**             | Easy follower-arm integration with provided examples                          |
 | 🛠️**Extensible**            | Simple API for adding new robot support                                       |
 | 💰**Cost-effective**          | Ultra low-cost hardware solution                                              |
