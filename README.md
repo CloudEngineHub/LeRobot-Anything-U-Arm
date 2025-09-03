@@ -174,8 +174,8 @@ We welcome contributions! Here's how you can help:
 - **Yanwen Zou** - Hardware&Software System Design
 - **Zhaoye Zhou** - Hareware Assemble and Adjustment
 - **Chenyang Shi** - SAPIEN and website setup
-- **Zewei Ye** - Implement Experiment
-- **Jie Yi** - Implement Experiment
+- **Zewei Ye** - Real-world Experiment
+- **Jie Yi** - Real-world Experiment
 - **Junda Huang** - Idea Discussion and website setup
 - **Gaotian Wang** - Idea Discussion
 
