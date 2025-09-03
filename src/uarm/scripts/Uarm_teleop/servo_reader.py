@@ -1,21 +1,24 @@
 #!/usr/bin/env python3
-import rospy
+import rclpy
+from rclpy.node import Node
 import serial
 import time
 import re
 import numpy as np
 from std_msgs.msg import Float64MultiArray
 
-class ServoReaderNode:
+class ServoReaderNode(Node):
     def __init__(self):
-        rospy.init_node("servo_reader_node")
-        self.pub = rospy.Publisher('/servo_angles', Float64MultiArray, queue_size=10)
-        self.rate = rospy.Rate(50)
+        super().__init__("servo_reader_node")
+        self.pub = self.create_publisher(Float64MultiArray, '/servo_angles', 10)
+        self.rate = self.create_rate(50)
         self.SERIAL_PORT = '/dev/ttyUSB0'
 
-        self.BAUDRATE = rospy.get_param("~baudrate", 115200)
+        # 声明参数并获取值
+        self.declare_parameter("baudrate", 115200)
+        self.BAUDRATE = self.get_parameter("baudrate").get_parameter_value().integer_value
         self.ser = serial.Serial(self.SERIAL_PORT, self.BAUDRATE, timeout=0.1)
-        rospy.loginfo("串口已打开")
+        self.get_logger().info("串口已打开")
 
         self.gripper_range = 0.48
         self.zero_angles = [0.0] * 7
@@ -43,7 +46,7 @@ class ServoReaderNode:
             response = self.send_command(f'#{i:03d}PRAD!')
             angle = self.pwm_to_angle(response.strip())
             self.zero_angles[i] = angle if angle is not None else 0.0
-        rospy.loginfo("舵机初始角度校准完成")
+        self.get_logger().info("舵机初始角度校准完成")
 
     def run(self):
         angle_offset = [0.0] * 7  # 当前发布出去的角度
@@ -51,7 +54,7 @@ class ServoReaderNode:
         num_interp = 5  # 插值步数
         step_size = 1  # 最小变化量阈值
 
-        while not rospy.is_shutdown():
+        while rclpy.ok():
             for i in range(7):
                 response = self.send_command(f'#{i:03d}PRAD!')
                 angle = self.pwm_to_angle(response.strip())
@@ -60,19 +63,28 @@ class ServoReaderNode:
                     if abs(new_angle - target_angle_offset[i]) > step_size:
                         target_angle_offset[i] = new_angle
                 else:
-                    rospy.logwarn(f"舵机 {i} 回传异常: {response.strip()}")
+                    self.get_logger().warn(f"舵机 {i} 回传异常: {response.strip()}")
 
             # 插值逼近目标角度
             for step in range(num_interp):
                 for i in range(7):
                     delta = target_angle_offset[i] - angle_offset[i]
                     angle_offset[i] += delta * 0.2  # 惰性插值，系数 < 1 可调节平滑度
-                self.pub.publish(Float64MultiArray(data=angle_offset))
+                msg = Float64MultiArray()
+                msg.data = angle_offset
+                self.pub.publish(msg)
                 self.rate.sleep()
 
-if __name__ == '__main__':
+def main(args=None):
+    rclpy.init(args=args)
+    node = ServoReaderNode()
     try:
-        node = ServoReaderNode()
         node.run()
-    except rospy.ROSInterruptException:
+    except KeyboardInterrupt:
         pass
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()

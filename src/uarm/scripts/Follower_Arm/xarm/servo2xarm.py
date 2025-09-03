@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-import rospy
+import rclpy
+from rclpy.node import Node
 from std_msgs.msg import Float64MultiArray
 from xarm.wrapper import XArmAPI  
 import numpy as np
@@ -7,11 +8,11 @@ import serial
 import time
 import re
 
-class XArmTeleopNode:
+class XArmTeleopNode(Node):
     def __init__(self):
-        rospy.init_node("xarm_teleop_node")
-        self.pub = rospy.Publisher('/robot_action', Float64MultiArray, queue_size=10)
-        self.rate = rospy.Rate(20)
+        super().__init__("xarm_teleop_node")
+        self.pub = self.create_publisher(Float64MultiArray, '/robot_action', 10)
+        self.rate = self.create_rate(20)
 
         self.init_qpos = np.radians([14.1, -8, -24.7, 196.9, 62.3, -8.8, 0.0])
         self.arm = XArmAPI('192.168.1.199')
@@ -19,7 +20,11 @@ class XArmTeleopNode:
         self.arm_qpos = self.init_qpos
 
         self.gripper_range = 0.48
-        rospy.Subscriber('/servo_angles', Float64MultiArray, self.servo_callback)
+        self.subscription = self.create_subscription(
+            Float64MultiArray,
+            '/servo_angles',
+            self.servo_callback,
+            10)
 
     def _init_arm(self):
         self.arm.motion_enable(enable=True) 
@@ -54,7 +59,7 @@ class XArmTeleopNode:
         return rad_angle
 
     def run(self):
-        while not rospy.is_shutdown():
+        while rclpy.ok():
             gripper_position = self.angle_to_gripper(self.arm_qpos[6])
             self.arm.set_servo_angle(angle=self.arm_qpos[:6], speed=1.57, is_radian=True)
             self.arm.set_gripper_position(gripper_position, speed=5000)
@@ -63,14 +68,22 @@ class XArmTeleopNode:
             arm_qpos_degree[:6] = np.degrees(self.arm_qpos[:6])
             arm_qpos_degree[6] = self.gripper_range - self.arm_qpos[6]
 
-            msg = Float64MultiArray(data=list(arm_qpos_degree))
+            msg = Float64MultiArray()
+            msg.data = list(arm_qpos_degree)
             self.pub.publish(msg)
-            rospy.loginfo(f"Published robot action: {msg.data}")
+            self.get_logger().info(f"Published robot action: {msg.data}")
             self.rate.sleep()
 
-if __name__ == "__main__":
+def main(args=None):
+    rclpy.init(args=args)
+    node = XArmTeleopNode()
     try:
-        node = XArmTeleopNode()
         node.run()
-    except rospy.ROSInterruptException:
+    except KeyboardInterrupt:
         pass
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
+
+if __name__ == "__main__":
+    main()

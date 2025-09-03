@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-import rospy
+import rclpy
+from rclpy.node import Node
 import numpy as np
 import pickle
 import os
@@ -34,7 +35,7 @@ def handle_shutdown(signum, frame):
     global exit_flag
     exit_flag = True
     print("\n[Shutdown] Ctrl+C pressed. Cleaning up...")
-    rospy.signal_shutdown("Ctrl+C exit")
+    # ROS2不需要显式的signal_shutdown
 
 signal.signal(signal.SIGINT, handle_shutdown)
 
@@ -52,10 +53,11 @@ def speak(text: str):
         text = re.sub(r'\b\d+\b', replace_numbers, text)
         subprocess.run(["espeak-ng", "-v", "en", "-s", "150", text])
     except Exception as e:
-        rospy.logwarn(f"Speech failed: {e}")
+        print(f"Speech failed: {e}")
 
-class Recorder:
+class Recorder(Node):
     def __init__(self):
+        super().__init__('episode_recorder')
         self.bridge = CvBridge()
         self.lock = Lock()
 
@@ -68,10 +70,10 @@ class Recorder:
         self.episode = []
         self.recording = False
 
-        rospy.Subscriber('/cam_1', Image, self.image1_callback)
-        rospy.Subscriber('/cam_2', Image, self.image2_callback)
-        rospy.Subscriber('/robot_state', Float64MultiArray, self.state_callback)
-        rospy.Subscriber('/robot_action', Float64MultiArray, self.action_callback)
+        self.subscription1 = self.create_subscription(Image, '/cam_1', self.image1_callback, 10)
+        self.subscription2 = self.create_subscription(Image, '/cam_2', self.image2_callback, 10)
+        self.subscription3 = self.create_subscription(Float64MultiArray, '/robot_state', self.state_callback, 10)
+        self.subscription4 = self.create_subscription(Float64MultiArray, '/robot_action', self.action_callback, 10)
 
     def image1_callback(self, msg):
         try:
@@ -79,7 +81,7 @@ class Recorder:
             # print(cv_image.size)
             cropped_resized = center_crop_and_resize(cv_image, crop_h=720, crop_w=720)  # you can adjust this
         except Exception as e:
-            rospy.logerr(f"Failed to convert cam_1 image: {e}")
+            self.get_logger().error(f"Failed to convert cam_1 image: {e}")
             return
         with self.lock:
             self.latest_image_1 = cropped_resized
@@ -91,7 +93,7 @@ class Recorder:
             cv_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
             cropped_resized = center_crop_and_resize(cv_image, crop_h=720, crop_w=720)
         except Exception as e:
-            rospy.logerr(f"Failed to convert cam_2 image: {e}")
+            self.get_logger().error(f"Failed to convert cam_2 image: {e}")
             return
         with self.lock:
             self.latest_image_2 = cropped_resized
@@ -124,7 +126,7 @@ class Recorder:
                 "action": self.latest_action.copy()
             }
             self.episode.append(ts)
-            rospy.loginfo(f"Recorded step {len(self.episode)}")
+            self.get_logger().info(f"Recorded step {len(self.episode)}")
             self.latest_state = None
             self.latest_action = None
 
@@ -136,7 +138,7 @@ class Recorder:
 
     def save_episode(self, episode_id: int):
         if not self.episode:
-            rospy.logwarn("No data recorded, skipping save.")
+            self.get_logger().warn("No data recorded, skipping save.")
             return
 
         save_dir = os.path.expanduser("~/ros_save_data/put_stick_into_hole0731")
@@ -177,9 +179,9 @@ class Recorder:
             )
 
             tf.data.experimental.save(ds, tfrecord_path)
-            rospy.loginfo(f"✅ RLDS TFRecord episode saved to {tfrecord_path}")
+            self.get_logger().info(f"✅ RLDS TFRecord episode saved to {tfrecord_path}")
         except Exception as e:
-            rospy.logerr(f"Failed to save RLDS TFRecord: {e}")
+            self.get_logger().error(f"Failed to save RLDS TFRecord: {e}")
 
         self.episode = []
 
@@ -194,26 +196,28 @@ def get_next_episode_id(save_dir: str) -> int:
             continue
     return max(episode_ids, default=0) + 1
 
-if __name__ == '__main__':
+def main(args=None):
+    global exit_flag
+    rclpy.init(args=args)
+    recorder = Recorder()
+
+    save_dir = os.path.expanduser("~/ros_save_data/put_stick_into_hole0731")
+    os.makedirs(save_dir, exist_ok=True)
+    episode_id = get_next_episode_id(save_dir)
+
+    cv2.namedWindow("Preview: cam_1", cv2.WINDOW_NORMAL)
+    cv2.namedWindow("Preview: cam_2", cv2.WINDOW_NORMAL)
+    cv2.resizeWindow("Preview: cam_1", 640, 360)
+    cv2.resizeWindow("Preview: cam_2", 640, 360)
+
+    start_time = time.time()
+
+    recorder.get_logger().info(f"🔴 Recording episode {episode_id}. Press Ctrl+C to stop and save.")
+    recorder.recording = True
+
     try:
-        rospy.init_node('recorder')
-        recorder = Recorder()
-
-        save_dir = os.path.expanduser("~/ros_save_data/put_stick_into_hole0731")
-        os.makedirs(save_dir, exist_ok=True)
-        episode_id = get_next_episode_id(save_dir)
-
-        cv2.namedWindow("Preview: cam_1", cv2.WINDOW_NORMAL)
-        cv2.namedWindow("Preview: cam_2", cv2.WINDOW_NORMAL)
-        cv2.resizeWindow("Preview: cam_1", 640, 360)
-        cv2.resizeWindow("Preview: cam_2", 640, 360)
-
-        start_time = time.time()
-
-        rospy.loginfo(f"🔴 Recording episode {episode_id}. Press Ctrl+C to stop and save.")
-        recorder.recording = True
-
-        while not rospy.is_shutdown() and not exit_flag:
+        while rclpy.ok() and not exit_flag:
+            rclpy.spin_once(recorder, timeout_sec=0.01)
             frame1, frame2 = recorder.get_last_frames()
             if frame1 is not None:
                 cv2.putText(frame1, "Recording...", (20, 40),
@@ -224,14 +228,19 @@ if __name__ == '__main__':
                             cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
                 cv2.imshow("Preview: cam_2", frame2)
             cv2.waitKey(10)
+    except KeyboardInterrupt:
+        pass
 
-        recorder.recording = False
-        rospy.loginfo("⏹️ Stopped recording. Saving episode...")
-        recorder.save_episode(episode_id)
-        # ✅ 录制后打印花费时间
-        duration = time.time() - start_time
-        rospy.loginfo(f"🕒 Episode {episode_id} recorded in {duration:.2f} seconds.")
-        rospy.loginfo("✅ Episode saved. Exiting.")
+    recorder.recording = False
+    recorder.get_logger().info("⏹️ Stopped recording. Saving episode...")
+    recorder.save_episode(episode_id)
+    # ✅ 录制后打印花费时间
+    duration = time.time() - start_time
+    recorder.get_logger().info(f"🕒 Episode {episode_id} recorded in {duration:.2f} seconds.")
+    recorder.get_logger().info("✅ Episode saved. Exiting.")
 
-    except rospy.ROSInterruptException:
-        rospy.loginfo("ROS Interrupt received. Shutdown.")
+    recorder.destroy_node()
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
