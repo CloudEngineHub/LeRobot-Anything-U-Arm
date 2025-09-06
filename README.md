@@ -4,6 +4,8 @@
 [![ROS Noetic](https://img.shields.io/badge/ROS-Noetic-brightgreen.svg)](https://www.ros.org/)
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
 [![Ubuntu](https://img.shields.io/badge/Ubuntu-20.04-orange.svg)](https://ubuntu.com/)
+[![Arxiv](https://img.shields.io/badge/arXiv-2509.02437-b31b1b.svg
+)](https://arxiv.org/abs/2509.02437)
 [![Apache License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 <p align="center">
