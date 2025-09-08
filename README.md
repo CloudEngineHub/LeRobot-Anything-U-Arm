@@ -23,7 +23,8 @@
 
 # 📰 News
 
-- 2025-08-15: **LeRobot Anything 0.1.0** hardware setup, the 1st version fully capable for three major robot arm configurations, starts from 60$.
+- 2025-09-08: Hardware Assembly Video Uploaded!
+- 2025-08-15: **LeRobot Anything UArm 0.1.0** hardware setup, the 1st version fully capable for three major robot arm configurations, starts from 60$.
 
 ---
 
