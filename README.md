@@ -123,7 +123,7 @@ For detail, see our technical report [here](https://arxiv.org/abs/2509.02437).
 
 1. 💵 **Buy your parts**: [Bill of Materials](https://docs.google.com/document/d/1TjhJOeJXsD5kmoYF-kuWfPju6WSUeSnivJiU7TH4vWs/edit?tab=t.0#heading=h.k991lzlarfb8)
 2. 🖨️ **Print your stuff**: [3D printing](https://github.com/MINT-SJTU/Lerobot-Anything-U-arm/tree/main/mechanical)
-3. 🔨 [**Assemble**!] [Assembly Guide](https://www.youtube.com/watch?v=-gpYuN2LlVs)
+3. 🔨 **Assemble**! [Assembly Guide](https://www.youtube.com/watch?v=-gpYuN2LlVs)
 4. 💻 **Software Env Set up & Real-world Teleop**: [Get your robot moving!](https://github.com/MINT-SJTU/Lerobot-Anything-Uarm/blob/main/howtoplay.md)
 5. 🎮 **Simulation**: [Try it out in SAPIEN!](https://github.com/MINT-SJTU/Lerobot-Anything-U-arm/blob/main/src/simulation/README.md)
 
