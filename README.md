@@ -37,7 +37,7 @@
 - [🚀 Quick Start](#-quick-start)
 - [🔮 Roadmap](#-roadmap)
 - [🤝 Contributing](#-contributing)
-
+- [🔧 Tired of DIY? Order Now](#-Order-Link)
 ---
 
 ## 🎯 Overview
@@ -172,6 +172,10 @@ We welcome contributions! Here's how you can help:
 ### 🤖 Adding New Robot Support
 
 ---
+
+## 🔧 Order Link
+> If you are tired of DIY, contact business@evomind-tech.com for purchase.
+
 
 ## 👥 Contributors
 
