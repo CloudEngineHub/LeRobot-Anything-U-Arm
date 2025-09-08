@@ -23,7 +23,7 @@
 
 # 📰 News
 
-- 2025-09-08: Hardware Assembly Video Uploaded!
+- 2025-09-08: Hardware Assembly Video Uploaded! We also open-sourced 5 datasets collected by UArm with XArm6 at [our huggingface page](https://huggingface.co/MINT-SJTU)
 - 2025-08-15: **LeRobot Anything UArm 0.1.0** hardware setup, the 1st version fully capable for three major robot arm configurations, starts from 60$.
 
 ---
