@@ -111,9 +111,9 @@ def alarmAlarmJsonFile():
 
 class Bestman_Real_CR5:
     """
-    • sendRecvMsg(cmd) : 配置 / 查询（阻塞等待返回）
-    • _send_raw(cmd)   : 高频运动流 (不等待回包)
-    • 实时反馈通过 self.latest_state 提供 (numpy 结构体)
+    • sendRecvMsg(cmd) : Configuration / query (blocking wait for response)
+    • _send_raw(cmd)   : High-frequency motion stream (no wait for response)
+    • Real-time feedback provided through self.latest_state (numpy structure)
     """
 
     def __init__(self, ip: str,
@@ -122,16 +122,16 @@ class Bestman_Real_CR5:
                  text_log: bool = False):
         self._dash = self._open_sock(ip, dash_port, 4096)
         self._feed = self._open_sock(ip, feed_port, 144000)
-        self._lock = threading.Lock()          # 保护 dash socket
+        self._lock = threading.Lock()          # Protect dash socket
         self.text_log = text_log
         
-        # 实时反馈缓存
+        # Real-time feedback cache
         self.latest_state = None
         self._fb_running = True
         threading.Thread(target=self._feedback_loop,
                          daemon=True).start()
 
-        # 上电 & 使能
+        # Power on & enable
         self.sendRecvMsg("PowerOn()")
         self.sendRecvMsg("EnableRobot()")
 
@@ -145,14 +145,14 @@ class Bestman_Real_CR5:
             try: s.close()
             except OSError: pass
 
-    # ------- socket 工具 --------------------------------------------------
+    # ------- socket utilities --------------------------------------------------
     @staticmethod
     def _open_sock(ip, port, rcv_buf):
         s = socket.socket();  s.connect((ip, port))
         s.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, rcv_buf)
         return s
 
-    # 发送 + 等待 + 解析（阻塞）
+    # Send + wait + parse (blocking)
     def sendRecvMsg(self, cmd: str, timeout: float = 3.0) -> str:
         if not cmd.endswith('\n'):
             cmd += '\n'
@@ -163,27 +163,27 @@ class Bestman_Real_CR5:
         self._parse_error(reply, cmd)
         return reply
 
-    # 仅发送（非阻塞，用于 ServoJ 等高频流）
+    # Send only (non-blocking, for high-frequency streams like ServoJ)
     def _send_raw(self, cmd: str):
         if not cmd.endswith('\n'):
             cmd += '\n'
         with self._lock:
             self._dash.send(cmd.encode())
 
-    # ------ 错误解析（简单打印，可按需 raise） ----------------------------
+    # ------ Error parsing (simple print, can raise as needed) ----------------------------
     @staticmethod
     def _parse_error(reply: str, src_cmd: str):
-        # 返回格式 "ErrorID,{…},xxx();"  → 提取首个整数
+        # Return format "ErrorID,{…},xxx();"  → Extract first integer
         try:
             err = int(reply.split(',')[0])
             if err != 0:
                 print(f"[CR5‑ERR] {src_cmd.strip()}  ->  {reply.strip()}")
         except ValueError:
-            pass   # 非标准返回时忽略
+            pass   # Ignore non-standard returns
 
-    # ------ 实时反馈线程 --------------------------------------------------
+    # ------ Real-time feedback thread --------------------------------------------------
     def _feedback_loop(self):
-        """后台常驻读取 1440 B 报文，每次解析常用字段"""
+        """Background thread continuously reads 1440 B packets, parsing common fields each time"""
         while self._fb_running:
             try:
                 buf = self._feed.recv(1440, socket.MSG_WAITALL)
@@ -194,24 +194,24 @@ class Bestman_Real_CR5:
             except (socket.timeout, ConnectionError):
                 pass
 
-    # ------ 基本公共接口 --------------------------------------------------
+    # ------ Basic public interface --------------------------------------------------
     def enable_robot(self, load=0.0, centerX=0.0, centerY=0.0, centerZ=0.0, isCheck=-1,):
         """
-            可选参数
-            参数名 类型 说明
+            Optional parameters
+            Parameter name Type Description
             load double
-            设置负载重量，取值范围不能超过各个型号机器⼈的负载范围。单位：kg
-            centerX double X⽅向偏⼼距离。取值范围：-999~ 999，单位：mm
-            centerY double Y⽅向偏⼼距离。取值范围：-999~ 999，单位：mm
-            centerZ double Z⽅向偏⼼距离。取值范围：-999~ 999，单位：mm
-            isCheck int    是否检查负载。1表⽰检查，0表⽰不检查。如果设置为1，则机械臂
-            使能后会检查实际负载是否和设置负载⼀致，如果不⼀致会⾃动下使
-            能。默认值为0
-            可携带的参数数量如下：
-            0：不携带参数，表⽰使能时不设置负载重量和偏⼼参数。
-            1：携带⼀个参数，该参数表⽰负载重量。
-            4：携带四个参数，分别表⽰负载重量和偏⼼参数。
-            5：携带五个参数，分别表⽰负载重量、偏⼼参数和是否检查负载。
+            Set load weight, value range cannot exceed the load range of each robot model. Unit: kg
+            centerX double X-direction eccentric distance. Value range: -999~ 999, unit: mm
+            centerY double Y-direction eccentric distance. Value range: -999~ 999, unit: mm
+            centerZ double Z-direction eccentric distance. Value range: -999~ 999, unit: mm
+            isCheck int    Whether to check load. 1 means check, 0 means no check. If set to 1, the robot arm
+            will check whether the actual load is consistent with the set load after enabling, and will automatically
+            disable if inconsistent. Default value is 0
+            The number of parameters that can be carried is as follows:
+            0: No parameters, means no load weight and eccentric parameters are set when enabling.
+            1: Carry one parameter, which represents the load weight.
+            4: Carry four parameters, representing load weight and eccentric parameters respectively.
+            5: Carry five parameters, representing load weight, eccentric parameters and whether to check load.
                 """
         string = 'EnableRobot('
         if load != 0:
@@ -227,7 +227,7 @@ class Bestman_Real_CR5:
     def disable_robot(self):
         """
         Disabled the robot
-        下使能机械臂
+        Disable robot arm
         """
         string = "DisableRobot()"
         return self.sendRecvMsg(string)
@@ -253,16 +253,16 @@ class Bestman_Real_CR5:
 
     def pause(self):
         """
-       暂停已下发的运动指令队列或者RunScript指令运⾏的⼯程。
-       Pause the delivered motion command queue or the RunScript command from running.
+        Pause the delivered motion command queue or the RunScript command from running.
+        Pause the delivered motion command queue or the RunScript command from running.
         """
         string = "Pause()"
         return self.sendRecvMsg(string)
 
     def Continue(self):
         """
-       继续已暂停的运动指令队列或者RunScript指令运⾏的⼯程。
-       Continue the paused motion command queue or the RunScript command from running.
+        Continue the paused motion command queue or the RunScript command from running.
+        Continue the paused motion command queue or the RunScript command from running.
         """
         string = "Continue()"
         return self.sendRecvMsg(string)
@@ -277,15 +277,15 @@ class Bestman_Real_CR5:
     
     def brake_control(self, axisID, value):
         """
-        描述
-        控制指定关节的抱闸。机械臂静⽌时关节会⾃动抱闸，如果⽤⼾需进⾏关节拖拽操作，可开启抱
-        闸，即在机械臂下使能状态，⼿动扶住关节后，下发开启抱闸的指令。
-        仅能在机器⼈下使能时控制关节抱闸，否则ErrorID会返回-1。
-        必选参数
-        参数名  类型  说明
-        axisID int 关节轴序号，1表⽰J1轴，2表⽰J2轴，以此类推
-        value int 设置抱闸状态。0表⽰抱闸锁死（关节不可移动），1表⽰松开抱闸（关节
-        可移动）
+        Description
+        Control the brake of specified joint. The joints automatically brake when the robot is stationary. If you need to drag the joints, you can switch on the brake,
+        i.e. hold the joint manually in the disabled status and deliver the command to switch on the brake.
+        Joint brake can be controlled only when the robot arm is disabled, otherwise, Error ID will return -1.
+        Required parameters
+        Parameter name   Type   Description
+        axisID int Joint axis number, 1 represents J1 axis, 2 represents J2 axis, and so on
+        value int Set brake status. 0 means brake locked (joint cannot move), 1 means release brake (joint
+        can move)
         Description
         Control the brake of specified joint. The joints automatically brake when the robot is stationary. If you need to drag the joints, you can switch on the brake,
         i.e. hold the joint manually in the disabled status and deliver the command to switch on the brake.
@@ -300,19 +300,19 @@ class Bestman_Real_CR5:
     
 
     
-    # ------ 全局速度设置 --------------------------------------------------
+    # ------ Global speed settings --------------------------------------------------
     def SpeedFactor(self, speed):
         """
-        设置全局速度⽐例。
-           机械臂点动时实际运动加速度/速度⽐例 = 控制软件点动设置中的值 x 全局速度⽐例。
-           例：控制软件设置的关节速度为12°/s，全局速率为50%，则实际点动速度为12°/s x 50% =
+        Set the global speed ratio.
+           Actual robot acceleration/speed ratio in jogging = value in Jog settings × global speed ratio.
+           Example: If the joint speed set in the software is 12°/s and the global speed ratio is 50%, then the actual jog speed is 12°/s x 50% =
            6°/s
-           机械臂再现时实际运动加速度/速度⽐例 = 运动指令可选参数设置的⽐例 x 控制软件再现设置
-           中的值 x 全局速度⽐例。
-           例：控制软件设置的坐标系速度为2000mm/s，全局速率为50%，运动指令设置的速率为
-           80%，则实际运动速度为2000mm/s x 50% x 80% = 800mm/s
-        未设置时沿⽤进⼊TCP/IP控制模式前控制软件设置的值。
-        取值范围：[1, 100]
+           Actual robot acceleration/speed ratio in playback = ratio set in motion command × value in Playback settings
+            × global speed ratio.
+           Example: If the coordinate system speed set in the software is 2000mm/s, the global speed ratio is 50%, and the speed set in the motion command is
+           80%, then the actual speed is 2000mm/s x 50% x 80% = 800mm/s.
+        If it is not set, the value set by the software before entering TCP/IP control mode will be adopted.
+        Range: [1, 100].
         Set the global speed ratio.
            Actual robot acceleration/speed ratio in jogging = value in Jog settings × global speed ratio.
            Example: If the joint speed set in the software is 12°/s and the global speed ratio is 50%, then the actual jog speed is 12°/s x 50% =

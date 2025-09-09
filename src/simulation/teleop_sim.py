@@ -3,7 +3,7 @@ import time
 import numpy as np
 import re
 import gymnasium as gym
-import mani_skill.envs  # 必须导入以注册所有 env/agent
+import mani_skill.envs  # Must import to register all env/agent
 from threading import Event, Thread, Lock
 from queue import Queue, Empty
 import torch
@@ -13,41 +13,41 @@ from mani_skill.utils import sapien_utils
 
 
 class ServoTeleoperatorSim: 
-    """机械臂遥操作仿真系统
+    """Robot arm teleoperation simulation system
     
-    支持通过串口读取舵机角度，并映射到不同类型的机械臂仿真环境中。
-    支持的机械臂类型：arx-x5, so100, xarm6_robotiq, panda, x_fetch, unitree_h1
+    Supports reading servo angles through serial port and mapping to different types of robot arm simulation environments.
+    Supported robot arm types: arx-x5, so100, xarm6_robotiq, panda, x_fetch, unitree_h1
     """
     
     def __init__(self, scene: str, robot_uids: str, serial_port: str = '/dev/ttyUSB0'):
-        """初始化遥操作系统
+        """Initialize teleoperation system
         
         Args:
-            scene: 仿真场景名称
-            robot_uids: 机械臂类型标识符
-            serial_port: 串口设备路径
+            scene: Simulation scene name
+            robot_uids: Robot arm type identifier
+            serial_port: Serial port device path
         """
-        # 串口配置
+        # Serial port configuration
         self.SERIAL_PORT = serial_port
         self.BAUDRATE = 115200
         self.ser = serial.Serial(self.SERIAL_PORT, self.BAUDRATE, timeout=0.01)
 
-        # 系统配置
+        # System configuration
         self.scene = scene
         self.robot_uids = robot_uids
         self.gripper_range = 0.48
-        self.zero_angles = [0.0] * 7  # 舵机初始校准角度
-        self.sim_init_angles = [0.0] * 7  # 仿真初始角度
+        self.zero_angles = [0.0] * 7  # Initial calibration angles for servos
+        self.sim_init_angles = [0.0] * 7  # Simulation initial angles
         self.stop_event = Event()
-        self.rate = 50.0  # 控制频率
+        self.rate = 50.0  # Control frequency
         
-        # 初始化舵机并校准零位
+        # Initialize servos and calibrate zero position
         self._init_servos()
 
-        # 线程安全的数据交换队列
+        # Thread-safe data exchange queue
         self.arm_pos_queue: "Queue[list]" = Queue(maxsize=1)
 
-        # 根据机器人类型选择控制模式
+        # Select control mode based on robot type
         if robot_uids == "x_fetch": 
             self.control_mode = "pd_joint_pos_dual_arm"
         elif robot_uids == "unitree_h1":
@@ -55,7 +55,7 @@ class ServoTeleoperatorSim:
         else: 
             self.control_mode = "pd_joint_pos"
 
-        # 创建仿真环境
+        # Create simulation environment
         self.env = gym.make(
             scene,
             robot_uids=robot_uids,
@@ -66,27 +66,27 @@ class ServoTeleoperatorSim:
             viewer_camera_configs=dict(shader_pack="rt-fast"),
             sim_config=dict(
                 default_materials_config=dict(
-                    static_friction=10.0,  # 静摩擦
-                    dynamic_friction=10.0, # 动摩擦
-                    restitution=0.0       # 反弹系数
+                    static_friction=10.0,  # Static friction
+                    dynamic_friction=10.0, # Dynamic friction
+                    restitution=0.0       # Restitution coefficient
                 )
             ),
         )
         obs, _ = self.env.reset(seed=0)
         print("Action space:", self.env.action_space)
         
-        # 为H1设置初始站立姿态
+        # Set initial standing pose for H1
         if robot_uids == "unitree_h1":
             self._setup_h1_standing_pose()
 
-        # 创建生产者线程（读取舵机角度）
+        # Create producer thread (read servo angles)
         self.produce_thread = Thread(
             target=self.angle_stream_loop, 
             args=(self.default_sender,), 
             daemon=True
         )
 
-        # 创建消费者线程（控制仿真）
+        # Create consumer thread (control simulation)
         self.consume_thread = Thread(
             target=self.pose_consumer_loop, 
             args=(self.teleop_sim_handler,), 
@@ -100,8 +100,8 @@ class ServoTeleoperatorSim:
         agent = getattr(self.env.unwrapped, "agent", None)
         pose = sapien.Pose()
         if agent is not None:
-            pose = agent.robot.get_pose()  # 返回 sapien.Pose
-            print(f"机器人初始位置: {pose}")
+            pose = agent.robot.get_pose()  # Returns sapien.Pose
+            print(f"Robot initial position: {pose}")
         camera_pose = sapien_utils.look_at(
             [0.0, -1.5, 1.7], pose.p
         )
@@ -114,32 +114,32 @@ class ServoTeleoperatorSim:
             camera_viewer.set_camera_pose(sapien.Pose(camera_position, camera_quaternion))
 
     def _setup_h1_standing_pose(self):
-        """为H1机器人设置初始站立姿态"""
+        """Set initial standing pose for H1 robot"""
         try:
             agent = getattr(self.env.unwrapped, "agent", None)
             if agent is not None:
-                # 使用H1预定义的站立姿态
+                # Use H1 predefined standing pose
                 standing_keyframe = agent.keyframes["standing"]
                 
-                # 检查qpos的维度
+                # Check qpos dimensions
                 if hasattr(standing_keyframe.qpos, '__len__') and len(standing_keyframe.qpos) >= 19:
                     agent.reset(standing_keyframe.qpos)
                     agent.robot.set_root_pose(standing_keyframe.pose)
-                    print("H1 已设置为站立姿态")
+                    print("H1 set to standing pose")
                 else:
-                    print("警告: standing_keyframe.qpos维度不正确，使用默认站立姿态")
-                    # 使用默认的站立姿态
+                    print("Warning: standing_keyframe.qpos dimensions incorrect, using default standing pose")
+                    # Use default standing pose
                     default_standing = np.array([
                         0, 0, 0, 0, 0, 0, 0, -0.4, -0.4, 0.0, 0.0, 0.8, 0.8, 0.0, 0.0, -0.4, -0.4, 0.0, 0.0
                     ])
                     agent.reset(default_standing)
                     agent.robot.set_root_pose(standing_keyframe.pose)
-                    print("H1 已设置为默认站立姿态")
+                    print("H1 set to default standing pose")
         except Exception as e:
-            print(f"设置 H1 站立姿态失败: {e}")
+            print(f"Failed to set H1 standing pose: {e}")
     
     def _init_servos(self):
-        """初始化舵机并校准零位角度"""
+        """Initialize servos and calibrate zero position angles"""
         self.send_command('#000PVER!')
         for i in range(7):
             self.send_command("#000PCSK!")
@@ -147,16 +147,16 @@ class ServoTeleoperatorSim:
             response = self.send_command(f'#{i:03d}PRAD!')
             angle = self.pwm_to_angle(response.strip())
             self.zero_angles[i] = angle if angle is not None else 0.0
-        print("[INFO] 舵机初始角度校准完成")
+        print("[INFO] Servo initial angle calibration completed")
 
     def send_command(self, cmd: str) -> str:
-        """发送串口命令并读取响应
+        """Send serial command and read response
         
         Args:
-            cmd: 要发送的命令字符串
+            cmd: Command string to send
             
         Returns:
-            响应字符串，如果无响应则返回空字符串
+            Response string, returns empty string if no response
         """
         self.ser.write(cmd.encode('ascii'))
         time.sleep(0.008)
@@ -165,16 +165,16 @@ class ServoTeleoperatorSim:
     
     def pwm_to_angle(self, response_str: str, pwm_min: int = 500, 
                      pwm_max: int = 2500, angle_range: float = 270):
-        """将PWM响应转换为角度
+        """Convert PWM response to angle
         
         Args:
-            response_str: 舵机响应字符串
-            pwm_min: PWM最小值
-            pwm_max: PWM最大值
-            angle_range: 角度范围（度）
+            response_str: Servo response string
+            pwm_min: PWM minimum value
+            pwm_max: PWM maximum value
+            angle_range: Angle range (degrees)
             
         Returns:
-            角度值，如果解析失败返回None
+            Angle value, returns None if parsing fails
         """
         match = re.search(r'P(\d{4})', response_str)
         if not match:
@@ -185,27 +185,27 @@ class ServoTeleoperatorSim:
         return angle
     
     def publish_arm_pos(self, arm_pos: list):
-        """发布最新的手臂位置到队列中，覆盖旧值"""
+        """Publish latest arm position to queue, overwriting old values"""
         try:
-            # 清空队列中的旧数据
+            # Clear old data from queue
             while True:
                 self.arm_pos_queue.get_nowait()
         except Empty:
             pass
         try:
-            # 添加新数据
+            # Add new data
             self.arm_pos_queue.put_nowait(list(arm_pos))
         except Exception:
             pass
     
     def get_latest_arm_pos(self, timeout: float = 0.0):
-        """获取最新的手臂位置快照
+        """Get latest arm position snapshot
         
         Args:
-            timeout: 超时时间，0表示立即返回
+            timeout: Timeout time, 0 means return immediately
             
         Returns:
-            最新的手臂位置列表，如果队列为空返回None
+            Latest arm position list, returns None if queue is empty
         """
         try:
             return self.arm_pos_queue.get(timeout=timeout) if timeout and timeout > 0 else self.arm_pos_queue.get_nowait()
@@ -214,51 +214,51 @@ class ServoTeleoperatorSim:
     
     def angle_to_gripper(self, angle_rad: float, pos_min: float, pos_max: float, 
                         angle_range: float = 1.5 * np.pi) -> float:
-        """将舵机角度映射到夹爪位置
+        """Map servo angle to gripper position
         
         Args:
-            angle_rad: 舵机角度（弧度）
-            pos_min: 夹爪最小位置
-            pos_max: 夹爪最大位置
-            angle_range: 舵机角度范围
+            angle_rad: Servo angle (radians)
+            pos_min: Gripper minimum position
+            pos_max: Gripper maximum position
+            angle_range: Servo angle range
             
         Returns:
-            夹爪位置值
+            Gripper position value
         """
         ratio = max(0, 1 - (angle_rad / angle_range))
         position = pos_min + (pos_max - pos_min) * ratio
         return float(np.clip(position, pos_min, pos_max))
 
     def convert_pose_to_action(self, pose: list) -> np.ndarray: 
-        """根据不同机械臂类型将舵机位置转换为仿真动作
+        """Convert servo position to simulation action based on different robot arm types
         
         Args:
-            pose: 7维舵机角度列表（弧度）
+            pose: 7-dimensional servo angle list (radians)
             
         Returns:
-            对应机械臂的动作向量
+            Corresponding robot arm action vector
         """
         action = np.array([])
 
-        if self.robot_uids == "arx-x5":  # 6轴机械臂 + 双指夹爪
+        if self.robot_uids == "arx-x5":  # 6-axis robot arm + dual-finger gripper
             action = np.array(pose)
-            # 处理夹爪：最后一维映射到夹爪位置
+            # Handle gripper: map last dimension to gripper position
             action[-1] = self.angle_to_gripper(action[-1], 0, 0.044)
             action = np.concatenate([action, [action[-1]]])
 
             action[2] = -action[2]
-            action[4], action[5] = -action[5], -action[4]  # 交换关节4和5
+            action[4], action[5] = -action[5], -action[4]  # Swap joints 4 and 5
         
-        elif self.robot_uids == "piper":  # 6轴机械臂 + 双指夹爪
+        elif self.robot_uids == "piper":  # 6-axis robot arm + dual-finger gripper
             action = np.array(pose)
             action[-1] = self.angle_to_gripper(action[-1], 0, 0.04)
 
             action = np.concatenate([action, [action[-1]]])
-            action[3], action[4] = action[4], -action[3]  # 交换关节4和5
+            action[3], action[4] = action[4], -action[3]  # Swap joints 4 and 5
 
-        elif self.robot_uids == "so100":  # 5轴机械臂
+        elif self.robot_uids == "so100":  # 5-axis robot arm
             pose_copy = pose.copy()
-            pose_copy.pop(5)  # 移除第6维（so100只有5轴）
+            pose_copy.pop(5)  # Remove 6th dimension (so100 only has 5 axes)
             action = np.array(pose_copy)
             action[-1] = self.angle_to_gripper(action[-1], -1.1, 1.1)
             
@@ -266,37 +266,37 @@ class ServoTeleoperatorSim:
             action[3] = -action[3]
             action[4] = -action[4]
 
-        elif self.robot_uids == "xarm6_robotiq":  # 6轴机械臂 + Robotiq夹爪
+        elif self.robot_uids == "xarm6_robotiq":  # 6-axis robot arm + Robotiq gripper
             action = np.array(pose)
-            action[3], action[4] = action[4], -action[3]  # 交换关节3和4
+            action[3], action[4] = action[4], -action[3]  # Swap joints 3 and 4
             # action[1] = -action[1]
             action[-1] = 0.81 - self.angle_to_gripper(action[-1], 0, 0.81)
 
-        elif self.robot_uids == "panda":  # 7轴机械臂
+        elif self.robot_uids == "panda":  # 7-axis robot arm
             pose_copy = pose.copy()
-            pose_copy.insert(2, 0.0)  # 在第3位插入0（Panda的第3关节）
+            pose_copy.insert(2, 0.0)  # Insert 0 at 3rd position (Panda's 3rd joint)
             action = np.array(pose_copy)
             # action[1] = -action[1]
             action[3] = -action[3]
-            action[4], action[5] = action[5], action[4]  # 交换关节4和5
+            action[4], action[5] = action[5], action[4]  # Swap joints 4 and 5
             action[-1] = self.angle_to_gripper(action[-1], -1.0, 1.0)
 
-        elif self.robot_uids == "x_fetch":  # 双臂机器人 + 移动底盘
+        elif self.robot_uids == "x_fetch":  # Dual-arm robot + mobile base
             pose_copy = pose.copy()
-            pose_copy.pop(5)  # 移除第6维
+            pose_copy.pop(5)  # Remove 6th dimension
             action = np.array(pose_copy)
             action[-1] = self.angle_to_gripper(action[-1], -1.1, 1.1)
-            # 调整关节方向
+            # Adjust joint directions
             action[0] = -action[0]
             action[1] = -action[1]
             action[3] = -action[3]
             action[4] = -action[4]
-            # 构建双臂动作
+            # Build dual-arm action
             left_arm_action = action.copy()
             right_arm_action = left_arm_action.copy()
             right_arm_action[0] = -right_arm_action[0]
             right_arm_action[-2] = -right_arm_action[-2]
-            # 组合：左臂关节 + 右臂关节 + 左右夹爪 + 底盘运动（0）
+            # Combine: left arm joints + right arm joints + left/right grippers + base motion (0)
             zero_action = np.zeros(6)
             action = np.concatenate([
                 left_arm_action[0:-1], 
@@ -305,58 +305,58 @@ class ServoTeleoperatorSim:
                 np.zeros(4) 
             ])
 
-        elif self.robot_uids == "widowx250s":  # 6轴机械臂 + 双指夹爪
+        elif self.robot_uids == "widowx250s":  # 6-axis robot arm + dual-finger gripper
             action = np.array(pose)
             action[-1] = self.angle_to_gripper(action[-1], 0, 0.04)
             action = np.concatenate([action, [action[-1]]])
             action[3], action[4] = action[4], -action[3] 
         
-        elif self.robot_uids == "unitree_h1":  # 人形机器人
+        elif self.robot_uids == "unitree_h1":  # Humanoid robot
             raw = np.array(pose, dtype=np.float32)
             action = np.zeros(19, dtype=np.float32)
 
-            # 只修改手臂关节的增量（相对于当前状态）
-            # 左臂：shoulder_pitch, shoulder_roll, shoulder_yaw, elbow
-            action[5] = raw[0]  # left_shoulder_pitch 增量
-            action[9] = raw[1]   # left_shoulder_roll 增量
-            action[13] = raw[2]  # left_shoulder_yaw 增量
-            action[17] = raw[3]  # left_elbow 增量
+            # Only modify arm joint increments (relative to current state)
+            # Left arm: shoulder_pitch, shoulder_roll, shoulder_yaw, elbow
+            action[5] = raw[0]  # left_shoulder_pitch increment
+            action[9] = raw[1]   # left_shoulder_roll increment
+            action[13] = raw[2]  # left_shoulder_yaw increment
+            action[17] = raw[3]  # left_elbow increment
 
-            # 右臂：shoulder_pitch, shoulder_roll, shoulder_yaw, elbow
-            action[6] = raw[4]   # right_shoulder_pitch 增量
-            action[10] = raw[5]  # right_shoulder_roll 增量
-            action[14] = raw[6]  # right_shoulder_yaw 增量
-            action[18] = raw[3]  # right_elbow 增量（复用第4个舵机）
+            # Right arm: shoulder_pitch, shoulder_roll, shoulder_yaw, elbow
+            action[6] = raw[4]   # right_shoulder_pitch increment
+            action[10] = raw[5]  # right_shoulder_roll increment
+            action[14] = raw[6]  # right_shoulder_yaw increment
+            action[18] = raw[3]  # right_elbow increment (reuse 4th servo)
 
         else: 
-            raise ValueError(f"不支持的机械臂类型: {self.robot_uids}")
+            raise ValueError(f"Unsupported robot arm type: {self.robot_uids}")
 
         return action
 
     def default_sender(self, arm_pos: list): 
-        """默认的角度发送回调（用于调试）"""
-        print(f"舵机角度(度): {np.degrees(arm_pos)}")
+        """Default angle sending callback (for debugging)"""
+        print(f"Servo angles (degrees): {np.degrees(arm_pos)}")
 
     def teleop_sim_handler(self, action: np.ndarray, dwell: float = 0.01):
-        """仿真控制处理函数
+        """Simulation control handler function
         
         Args:
-            action: 机械臂动作向量
-            dwell: 延迟时间
+            action: Robot arm action vector
+            dwell: Delay time
         """
         if self.env is None or action is None:
             return
             
-        # 所有机器人类型都执行动作
+        # All robot types execute actions
         self.env.step(action)
         self.env.render()
         time.sleep(dwell)
     
     def angle_stream_loop(self, on_send):
-        """角度数据生产者线程：周期性读取舵机角度
+        """Angle data producer thread: periodically read servo angles
         
         Args:
-            on_send: 回调函数，接收角度数据列表
+            on_send: Callback function that receives angle data list
         """
         num_joints = 7
         arm_pos = [0.0] * num_joints
@@ -365,43 +365,43 @@ class ServoTeleoperatorSim:
         next_time = time.monotonic()
 
         while not self.stop_event.is_set():
-            # 读取所有关节角度
+            # Read all joint angles
             for i in range(num_joints):
                 response = self.send_command(f'#{i:03d}PRAD!')
                 angle = self.pwm_to_angle(response.strip())
                 if angle is not None:
-                    # 计算相对于零位的角度
+                    # Calculate angle relative to zero position
                     new_angle = angle - self.zero_angles[i]
                     arm_pos[i] = np.radians(new_angle)
                 else: 
-                    raise ValueError(f"舵机{i}回传异常: {response.strip()}")
+                    raise ValueError(f"Servo {i} response error: {response.strip()}")
             
-            # 发布最新数据并调用回调
+            # Publish latest data and call callback
             self.publish_arm_pos(arm_pos)
             try:
                 on_send(list(arm_pos))
             except Exception as e:
-                print(f"角度发送回调异常: {e}")
+                print(f"Angle sending callback error: {e}")
                 
-            # 维持固定频率
+            # Maintain fixed frequency
             next_time += period
             sleep_dt = next_time - time.monotonic()
             if sleep_dt > 0:
                 time.sleep(sleep_dt)
             else:
-                # 如果落后较多，重新同步时间
+                # If falling behind significantly, resync time
                 next_time = time.monotonic()
 
     def pose_consumer_loop(self, on_pose):
-        """仿真控制消费者线程：周期性获取角度数据并控制仿真
+        """Simulation control consumer thread: periodically get angle data and control simulation
         
         Args:
-            on_pose: 回调函数，接收动作向量
+            on_pose: Callback function that receives action vector
         """
         period = max(1.0 / self.rate, 1e-6)
         next_time = time.monotonic()
 
-        # 安全获取动作空间维度
+        # Safely get action space dimensions
         try:
             action_shape = self.env.action_space.shape[0] if self.env.action_space is not None else 0
         except (AttributeError, TypeError, IndexError):
@@ -415,9 +415,9 @@ class ServoTeleoperatorSim:
                     action = self.convert_pose_to_action(pose)
                     on_pose(action)
                 except Exception as e:
-                    print(f"仿真控制回调异常: {e}")
+                    print(f"Simulation control callback error: {e}")
                     
-            # 维持固定频率
+            # Maintain fixed frequency
             next_time += period
             sleep_dt = next_time - time.monotonic()
             if sleep_dt > 0:
@@ -426,31 +426,31 @@ class ServoTeleoperatorSim:
                 next_time = time.monotonic()
     
     def run(self):
-        """启动遥操作系统"""
-        print("启动角度读取线程...")
+        """Start teleoperation system"""
+        print("Starting angle reading thread...")
         self.produce_thread.start()
-        print("启动仿真控制线程...")
+        print("Starting simulation control thread...")
         self.consume_thread.start()
         
         try: 
-            print("系统运行中，按 Ctrl+C 停止...")
+            print("System running, press Ctrl+C to stop...")
             while True: 
                 time.sleep(0.5)
         except KeyboardInterrupt:
-            print("收到中断信号，准备停止...")
+            print("Received interrupt signal, preparing to stop...")
         finally:
             self.stop_event.set()
             self.produce_thread.join(timeout=2.0)
             self.consume_thread.join(timeout=2.0)
-            print("已停止所有线程")
+            print("All threads stopped")
             self.env.close()
             self.ser.close()
-            print("资源清理完成")
+            print("Resource cleanup completed")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description='机械臂遥操作仿真程序',
+        description='Robot arm teleoperation simulation program',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     parser.add_argument(
@@ -458,45 +458,45 @@ if __name__ == "__main__":
         type=str, 
         default='so100',
         choices=['arx-x5', 'so100', 'xarm6_robotiq', 'panda', 'x_fetch', 'piper', 'widowx250s'],
-        help='选择要控制的机械臂类型'
+        help='Select robot arm type to control'
     )
     parser.add_argument(
         '--scene', '-s', 
         type=str, 
         default='ReplicaCAD_SceneManipulation-v1',
-        help='仿真场景名称'
+        help='Simulation scene name'
     )
     parser.add_argument(
         '--rate', 
         type=float, 
         default=50.0,
-        help='控制频率 (Hz)'
+        help='Control frequency (Hz)'
     )
     parser.add_argument(
         '--serial-port', 
         type=str, 
         default='/dev/ttyUSB0',
-        help='串口设备路径'
+        help='Serial port device path'
     )
     
     args = parser.parse_args()
     
-    # 显示启动信息
+    # Display startup information
     print("=" * 60)
-    print("    机械臂遥操作仿真系统")
+    print("    Robot Arm Teleoperation Simulation System")
     print("=" * 60)
-    print(f"机械臂类型: {args.robot}")
-    print(f"仿真场景:   {args.scene}")
-    print(f"控制频率:   {args.rate} Hz")
-    print(f"串口设备:   {args.serial_port}")
+    print(f"Robot arm type: {args.robot}")
+    print(f"Simulation scene:   {args.scene}")
+    print(f"Control frequency:   {args.rate} Hz")
+    print(f"Serial device:   {args.serial_port}")
     print("-" * 60)
     
-    # 创建并运行仿真实例
+    # Create and run simulation instance
     try:
         sim = ServoTeleoperatorSim(scene=args.scene, robot_uids=args.robot, serial_port=args.serial_port)
         sim.rate = args.rate
         sim.run()
     except Exception as e:
-        print(f"程序运行出错: {e}")
+        print(f"Program runtime error: {e}")
         import traceback
         traceback.print_exc()

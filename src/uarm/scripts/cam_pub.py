@@ -11,35 +11,35 @@ class CameraNode:
         rospy.init_node('multi_cam_node')
         self.bridge = CvBridge()
 
-        # 配置第一个 RealSense 相机（使用序列号）
+        # Configure first RealSense camera (using serial number)
         self.pipeline_1 = rs.pipeline()
         config_1 = rs.config()
-        config_1.enable_device('338622073582')  # 第一个相机的序列号
+        config_1.enable_device('338622073582')  # First camera serial number
         config_1.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
         self.pipeline_1.start(config_1)
 
-        # 配置第二个 RealSense 相机（使用序列号）
+        # Configure second RealSense camera (using serial number)
         self.pipeline_2 = rs.pipeline()
         config_2 = rs.config()
-        config_2.enable_device('148522073685')  # 第二个相机的序列号
+        config_2.enable_device('148522073685')  # Second camera serial number
         config_2.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
         self.pipeline_2.start(config_2)
 
-        # 发布图像话题
+        # Publish image topics
         self.pub_1 = rospy.Publisher('/cam_1', Image, queue_size=30)
         self.pub_2 = rospy.Publisher('/cam_2', Image, queue_size=30)
 
-        # 定时器以10Hz频率发布图像
-        rospy.Timer(rospy.Duration(0.1), self.publish_images)  # 10Hz 可调
+        # Timer to publish images at 10Hz frequency
+        rospy.Timer(rospy.Duration(0.1), self.publish_images)  # 10Hz adjustable
 
     def publish_images(self, event):
-        # 获取第一个相机的图像数据
-        frames_1 = self.pipeline_1.wait_for_frames()  # 获取帧
-        color_frame_1 = frames_1.get_color_frame()  # 获取颜色帧
+        # Get image data from first camera
+        frames_1 = self.pipeline_1.wait_for_frames()  # Get frames
+        color_frame_1 = frames_1.get_color_frame()  # Get color frame
         if not color_frame_1:
             rospy.logwarn("Failed to capture image from camera 1.")
         else:
-            frame_1 = np.asanyarray(color_frame_1.get_data())  # 转换为 NumPy 数组
+            frame_1 = np.asanyarray(color_frame_1.get_data())  # Convert to NumPy array
             ros_img_1 = self.bridge.cv2_to_imgmsg(frame_1, encoding='bgr8')
             self.pub_1.publish(ros_img_1)
             rospy.loginfo("Published image from camera 1")
@@ -47,13 +47,13 @@ class CameraNode:
             # Visualize the image from camera 1
             # self.visualize_image(frame_1, "Camera 1")
 
-        # 获取第二个相机的图像数据
-        frames_2 = self.pipeline_2.wait_for_frames()  # 获取帧
-        color_frame_2 = frames_2.get_color_frame()  # 获取颜色帧
+        # Get image data from second camera
+        frames_2 = self.pipeline_2.wait_for_frames()  # Get frames
+        color_frame_2 = frames_2.get_color_frame()  # Get color frame
         if not color_frame_2:
             rospy.logwarn("Failed to capture image from camera 2.")
         else:
-            frame_2 = np.asanyarray(color_frame_2.get_data())  # 转换为 NumPy 数组
+            frame_2 = np.asanyarray(color_frame_2.get_data())  # Convert to NumPy array
             ros_img_2 = self.bridge.cv2_to_imgmsg(frame_2, encoding='bgr8')
             self.pub_2.publish(ros_img_2)
             rospy.loginfo("Published image from camera 2")
@@ -67,7 +67,7 @@ class CameraNode:
         cv2.waitKey(1)  # Wait for a key press to update the window
 
     def __del__(self):
-        # 停止流
+        # Stop streams
         self.pipeline_1.stop()
         self.pipeline_2.stop()
         rospy.loginfo("Cameras released.")

@@ -228,7 +228,7 @@ if __name__ == '__main__':
         recorder.recording = False
         rospy.loginfo("⏹️ Stopped recording. Saving episode...")
         recorder.save_episode(episode_id)
-        # ✅ 录制后打印花费时间
+        # ✅ Print time spent after recording
         duration = time.time() - start_time
         rospy.loginfo(f"🕒 Episode {episode_id} recorded in {duration:.2f} seconds.")
         rospy.loginfo("✅ Episode saved. Exiting.")

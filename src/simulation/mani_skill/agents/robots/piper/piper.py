@@ -19,7 +19,7 @@ class Piper(BaseAgent):
     uid = "piper"
     urdf_path = f"{PACKAGE_ASSET_DIR}/robots/piper/piper.urdf"
     
-    # 根据 piper.urdf 分析，设置材料配置以改善抓取性能
+    # Based on piper.urdf analysis, set material configuration to improve grasping performance
     urdf_config = dict(
         _materials=dict(
             gripper=dict(static_friction=2.0, dynamic_friction=2.0, restitution=0.0)
@@ -34,7 +34,7 @@ class Piper(BaseAgent):
         ),
     )
 
-    # 关键帧配置 - 基于配置文件中的 homestate
+    # Keyframe configuration - based on homestate in config file
     keyframes = dict(
         rest=Keyframe(
             qpos=np.array(
@@ -53,7 +53,7 @@ class Piper(BaseAgent):
         )
     )
 
-    # 关节名称定义
+    # Joint name definitions
     arm_joint_names = [
         "joint1",
         "joint2", 
@@ -66,16 +66,16 @@ class Piper(BaseAgent):
         "joint7",
         "joint8",
     ]
-    ee_link_name = "link6"  # 末端执行器链接
+    ee_link_name = "link6"  # End effector link
 
-    # 控制参数 - 基于 config.yml 中的设置
+    # Control parameters - based on settings in config.yml
     arm_stiffness = 1000  # joint_stiffness from config
     arm_damping = 200     # joint_damping from config
     arm_force_limit = 100
 
     gripper_stiffness = 1000  # gripper_stiffnes from config
     gripper_damping = 200     # gripper_damping from config
-    gripper_force_limit = 10   # 基于 URDF 中夹爪关节的 effort 限制
+    gripper_force_limit = 10   # Based on effort limit of gripper joints in URDF
 
     @property
     def _controller_configs(self):

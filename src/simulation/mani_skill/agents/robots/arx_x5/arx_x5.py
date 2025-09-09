@@ -12,7 +12,7 @@ class ArxX5(BaseAgent):
     uid = "arx-x5"
     urdf_path = f"{PACKAGE_ASSET_DIR}/robots/ARX-X5/X5A.urdf"
 
-    # 关节分组（手臂 6 自由度 + 夹爪 2 自由度）
+    # Joint grouping (arm 6 DOF + gripper 2 DOF)
     arm_joint_names = [
         "joint1",
         "joint2",
@@ -23,7 +23,7 @@ class ArxX5(BaseAgent):
     ]
     gripper_joint_names = ["joint7", "joint8"]
 
-    # 关键帧（最小：全零）
+    # Keyframes (minimum: all zeros)
     keyframes = dict(
         zeros=Keyframe(
             qpos=np.array([0, 0, 0, 0, 0, 0, 0, 0]),
@@ -31,7 +31,7 @@ class ArxX5(BaseAgent):
         ),
     )
 
-    # 控制器配置（最小：关节位置与关节增量位置）
+    # Controller configuration (minimum: joint position and joint delta position)
     @property
     def _controller_configs(self):
         arm_pd_joint_pos = PDJointPosControllerConfig(

@@ -15,7 +15,7 @@ class ServoReaderNode:
 
         self.BAUDRATE = rospy.get_param("~baudrate", 115200)
         self.ser = serial.Serial(self.SERIAL_PORT, self.BAUDRATE, timeout=0.1)
-        rospy.loginfo("串口已打开")
+        rospy.loginfo("Serial port opened")
 
         self.gripper_range = 0.48
         self.zero_angles = [0.0] * 7
@@ -43,13 +43,13 @@ class ServoReaderNode:
             response = self.send_command(f'#{i:03d}PRAD!')
             angle = self.pwm_to_angle(response.strip())
             self.zero_angles[i] = angle if angle is not None else 0.0
-        rospy.loginfo("舵机初始角度校准完成")
+        rospy.loginfo("Servo initial angle calibration completed")
 
     def run(self):
-        angle_offset = [0.0] * 7  # 当前发布出去的角度
-        target_angle_offset = [0.0] * 7  # 每个舵机的目标角度
-        num_interp = 5  # 插值步数
-        step_size = 1  # 最小变化量阈值
+        angle_offset = [0.0] * 7  # Currently published angles
+        target_angle_offset = [0.0] * 7  # Target angle for each servo
+        num_interp = 5  # Interpolation steps
+        step_size = 1  # Minimum change threshold
 
         while not rospy.is_shutdown():
             for i in range(7):
@@ -60,13 +60,13 @@ class ServoReaderNode:
                     if abs(new_angle - target_angle_offset[i]) > step_size:
                         target_angle_offset[i] = new_angle
                 else:
-                    rospy.logwarn(f"舵机 {i} 回传异常: {response.strip()}")
+                    rospy.logwarn(f"Servo {i} response error: {response.strip()}")
 
-            # 插值逼近目标角度
+            # Interpolate to approach target angle
             for step in range(num_interp):
                 for i in range(7):
                     delta = target_angle_offset[i] - angle_offset[i]
-                    angle_offset[i] += delta * 0.2  # 惰性插值，系数 < 1 可调节平滑度
+                    angle_offset[i] += delta * 0.2  # Lazy interpolation, coefficient < 1 for adjustable smoothness
                 self.pub.publish(Float64MultiArray(data=angle_offset))
                 self.rate.sleep()
 

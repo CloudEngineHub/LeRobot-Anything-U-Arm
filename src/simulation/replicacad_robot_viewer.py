@@ -1,5 +1,5 @@
 import gymnasium as gym
-import mani_skill.envs  # 必须导入以注册所有 env/agent
+import mani_skill.envs  # Must import to register all env/agent
 import numpy as np
 import argparse
 import time
@@ -7,25 +7,25 @@ import sapien
 from mani_skill.utils import sapien_utils
 
 class StaticRobotViewer:
-    """静态机械臂查看器
+    """Static robot arm viewer
     
-    在仿真环境中显示指定类型的机械臂，支持多种机械臂类型：
+    Display specified type of robot arm in simulation environment, supports multiple robot arm types:
     arx-x5, so100, xarm6_robotiq, panda, x_fetch, unitree_h1
     """
     
     def __init__(self, scene: str, robot_uids: str, pose_name: str = "default"):
-        """初始化静态机械臂查看器
+        """Initialize static robot arm viewer
         
         Args:
-            scene: 仿真场景名称
-            robot_uids: 机械臂类型标识符
-            pose_name: 姿态名称（default, standing, t_pose等）
+            scene: Simulation scene name
+            robot_uids: Robot arm type identifier
+            pose_name: Pose name (default, standing, t_pose, etc.)
         """
         self.scene = scene
         self.robot_uids = robot_uids
         self.pose_name = pose_name
         
-        # 根据机器人类型选择控制模式
+        # Select control mode based on robot type
         if robot_uids == "x_fetch": 
             self.control_mode = "pd_joint_pos_dual_arm"
         elif robot_uids == "unitree_h1":
@@ -33,7 +33,7 @@ class StaticRobotViewer:
         else: 
             self.control_mode = "pd_joint_pos"
 
-        # 创建仿真环境
+        # Create simulation environment
         self.env = gym.make(
             scene,
             robot_uids=robot_uids,
@@ -44,12 +44,12 @@ class StaticRobotViewer:
             viewer_camera_configs=dict(shader_pack="rt-fast"),
         )
         
-        # 获取动作空间信息
+        # Get action space information
         obs, _ = self.env.reset(seed=0)
-        print(f"动作空间: {self.env.action_space}")
-        print(f"观察空间: {self.env.observation_space}")
+        print(f"Action space: {self.env.action_space}")
+        print(f"Observation space: {self.env.observation_space}")
         
-        # 设置机械臂姿态
+        # Set robot arm pose
         self._setup_robot_pose()
         self._setup_camera_pose()
 
@@ -57,8 +57,8 @@ class StaticRobotViewer:
         agent = getattr(self.env.unwrapped, "agent", None)
         pose = sapien.Pose()
         if agent is not None:
-            pose = agent.robot.get_pose()  # 返回 sapien.Pose
-            print(f"机器人初始位置: {pose}")
+            pose = agent.robot.get_pose()  # Returns sapien.Pose
+            print(f"Robot initial position: {pose}")
         camera_pose = sapien_utils.look_at(
             [-1.4, -1.1, 1.7], pose.p
         )
@@ -71,165 +71,165 @@ class StaticRobotViewer:
             camera_viewer.set_camera_pose(sapien.Pose(camera_position, camera_quaternion))
 
     def _setup_robot_pose(self):
-        """根据机器人类型和姿态名称设置机械臂姿态"""
+        """Set robot arm pose based on robot type and pose name"""
         try:
             agent = getattr(self.env.unwrapped, "agent", None)
             if agent is None:
-                print("警告：无法获取机器人代理")
+                print("Warning: Unable to get robot agent")
                 return
                 
             if self.robot_uids == "unitree_h1":
-                # H1人形机器人特殊处理
+                # Special handling for H1 humanoid robot
                 if self.pose_name == "standing":
                     if hasattr(agent, "keyframes") and "standing" in agent.keyframes:
                         standing_keyframe = agent.keyframes["standing"]
                         agent.reset(standing_keyframe.qpos)
                         agent.robot.set_root_pose(standing_keyframe.pose)
-                        print("H1 已设置为站立姿态")
+                        print("H1 set to standing pose")
                     else:
-                        print("警告：H1 站立姿态不可用，使用默认姿态")
+                        print("Warning: H1 standing pose not available, using default pose")
                 elif self.pose_name == "t_pose":
                     if hasattr(agent, "keyframes") and "t_pose" in agent.keyframes:
                         t_pose_keyframe = agent.keyframes["t_pose"]
                         agent.reset(t_pose_keyframe.qpos)
                         agent.robot.set_root_pose(t_pose_keyframe.pose)
-                        print("H1 已设置为T型姿态")
+                        print("H1 set to T-pose")
                     else:
-                        print("警告：H1 T型姿态不可用，使用默认姿态")
+                        print("Warning: H1 T-pose not available, using default pose")
                 else:
-                    print("H1 使用默认姿态")
+                    print("H1 using default pose")
                     
             elif self.robot_uids == "x_fetch":
-                # Fetch双臂机器人
+                # Fetch dual-arm robot
                 if self.pose_name == "home":
-                    # 设置双臂到home位置
+                    # Set dual arms to home position
                     home_pose = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
                     agent.reset(home_pose)
-                    print("Fetch 已设置为home姿态")
+                    print("Fetch set to home pose")
                 else:
-                    print("Fetch 使用默认姿态")
+                    print("Fetch using default pose")
                     
             elif self.robot_uids == "panda":
-                # Panda机械臂
+                # Panda robot arm
                 if self.pose_name == "home":
-                    # 设置到home位置
+                    # Set to home position
                     home_pose = np.array([0.0, 0.0, 0.0, -1.5708, 0.0, 1.5708, 0.7854, 0.0])
                     agent.reset(home_pose)
-                    print("Panda 已设置为home姿态")
+                    print("Panda set to home pose")
                 else:
-                    print("Panda 使用默认姿态")
+                    print("Panda using default pose")
                     
             elif self.robot_uids == "xarm6_robotiq":
-                # XArm6机械臂
+                # XArm6 robot arm
                 if self.pose_name == "home":
-                    # 设置到home位置
+                    # Set to home position
                     home_pose = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
                     agent.reset(home_pose)
-                    print("XArm6 已设置为home姿态")
+                    print("XArm6 set to home pose")
                 else:
-                    print("XArm6 使用默认姿态")
+                    print("XArm6 using default pose")
                     
             elif self.robot_uids == "arx-x5":
-                # ARX-X5机械臂
+                # ARX-X5 robot arm
                 if self.pose_name == "home":
-                    # 设置到home位置
+                    # Set to home position
                     home_pose = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
                     agent.reset(home_pose)
-                    print("ARX-X5 已设置为home姿态")
+                    print("ARX-X5 set to home pose")
                 else:
-                    print("ARX-X5 使用默认姿态")
+                    print("ARX-X5 using default pose")
                     
             elif self.robot_uids == "so100":
-                # SO100机械臂
+                # SO100 robot arm
                 if self.pose_name == "home":
-                    # 设置到home位置
+                    # Set to home position
                     home_pose = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
                     agent.reset(home_pose)
-                    print("SO100 已设置为home姿态")
+                    print("SO100 set to home pose")
                 else:
-                    print("SO100 使用默认姿态")
+                    print("SO100 using default pose")
                     
         except Exception as e:
-            print(f"设置机器人姿态时出错: {e}")
+            print(f"Error setting robot pose: {e}")
     
     def get_robot_info(self):
-        """获取机器人信息"""
+        """Get robot information"""
         try:
             agent = getattr(self.env.unwrapped, "agent", None)
             if agent is None:
-                return "无法获取机器人信息"
+                return "Unable to get robot information"
                 
-            info = f"机器人类型: {self.robot_uids}\n"
-            info += f"控制模式: {self.control_mode}\n"
+            info = f"Robot type: {self.robot_uids}\n"
+            info += f"Control mode: {self.control_mode}\n"
             
             if hasattr(agent, "robot"):
                 robot = agent.robot
-                info += f"机器人名称: {robot.name}\n"
+                info += f"Robot name: {robot.name}\n"
                 
-                # 获取关节信息
+                # Get joint information
                 if hasattr(robot, "get_active_joints"):
                     joints = robot.get_active_joints()
-                    info += f"关节数量: {len(joints)}\n"
+                    info += f"Number of joints: {len(joints)}\n"
                     for i, joint in enumerate(joints):
-                        info += f"  关节{i}: {joint.name}\n"
+                        info += f"  Joint {i}: {joint.name}\n"
                         
-                # 获取当前关节位置
+                # Get current joint positions
                 if hasattr(agent, "get_qpos"):
                     qpos = agent.get_qpos()
-                    info += f"当前关节位置: {qpos}\n"
+                    info += f"Current joint positions: {qpos}\n"
                     
             return info
             
         except Exception as e:
-            return f"获取机器人信息时出错: {e}"
+            return f"Error getting robot information: {e}"
     
     def run(self, duration: float = None):
-        """运行静态机械臂查看器
+        """Run static robot arm viewer
         
         Args:
-            duration: 运行时长（秒），None表示无限运行
+            duration: Runtime duration (seconds), None means infinite run
         """
         print("=" * 60)
-        print("    静态机械臂查看器")
+        print("    Static Robot Arm Viewer")
         print("=" * 60)
-        print(f"机械臂类型: {self.robot_uids}")
-        print(f"仿真场景:   {self.scene}")
-        print(f"姿态名称:   {self.pose_name}")
-        print(f"控制模式:   {self.control_mode}")
+        print(f"Robot arm type: {self.robot_uids}")
+        print(f"Simulation scene:   {self.scene}")
+        print(f"Pose name:   {self.pose_name}")
+        print(f"Control mode:   {self.control_mode}")
         print("-" * 60)
         
-        # 显示机器人信息
+        # Display robot information
         print(self.get_robot_info())
         print("-" * 60)
         
         start_time = time.time()
         
         try:
-            print("开始渲染，按 Ctrl+C 停止...")
+            print("Starting rendering, press Ctrl+C to stop...")
             
             while True:
-                # 渲染当前帧
+                # Render current frame
                 self.env.render()
                 
-                # 检查是否超时
+                # Check if timeout
                 if duration is not None and (time.time() - start_time) > duration:
-                    print(f"运行时间达到 {duration} 秒，自动停止")
+                    print(f"Runtime reached {duration} seconds, auto-stopping")
                     break
                     
-                # 短暂延迟以控制渲染频率
-                time.sleep(0.033)  # 约30 FPS
+                # Brief delay to control rendering frequency
+                time.sleep(0.033)  # About 30 FPS
                 
         except KeyboardInterrupt:
-            print("收到中断信号，准备停止...")
+            print("Received interrupt signal, preparing to stop...")
         finally:
             self.env.close()
-            print("资源清理完成")
+            print("Resource cleanup completed")
 
 
 def main():
-    """主函数"""
+    """Main function"""
     parser = argparse.ArgumentParser(
-        description='静态机械臂查看器',
+        description='Static robot arm viewer',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     parser.add_argument(
@@ -237,31 +237,31 @@ def main():
         type=str, 
         default='so100',
         choices=['arx-x5', 'so100', 'xarm6_robotiq', 'panda', 'x_fetch', 'unitree_h1'],
-        help='选择要显示的机械臂类型'
+        help='Select robot arm type to display'
     )
     parser.add_argument(
         '--scene', '-s', 
         type=str, 
         default='ReplicaCAD_SceneManipulation-v1',
-        help='仿真场景名称'
+        help='Simulation scene name'
     )
     parser.add_argument(
         '--pose', '-p',
         type=str,
         default='default',
         choices=['default', 'home', 'standing', 't_pose'],
-        help='机械臂姿态名称'
+        help='Robot arm pose name'
     )
     parser.add_argument(
         '--duration', '-d',
         type=float,
         default=None,
-        help='运行时长（秒），默认无限运行'
+        help='Runtime duration (seconds), default infinite run'
     )
     
     args = parser.parse_args()
     
-    # 创建并运行查看器
+    # Create and run viewer
     try:
         viewer = StaticRobotViewer(
             scene=args.scene, 
@@ -270,7 +270,7 @@ def main():
         )
         viewer.run(duration=args.duration)
     except Exception as e:
-        print(f"程序运行出错: {e}")
+        print(f"Program runtime error: {e}")
         import traceback
         traceback.print_exc()
 

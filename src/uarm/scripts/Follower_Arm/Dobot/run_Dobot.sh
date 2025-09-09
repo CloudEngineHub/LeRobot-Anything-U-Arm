@@ -1,9 +1,9 @@
 #!/bin/bash
-# 运行servo2Dobot.py脚本
+# Run servo2Dobot.py script
 
 source /opt/ros/noetic/setup.bash
 
-# 脚本所在的目录
+# Directory where the script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 source "$SCRIPT_DIR/../../../devel/setup.bash"
@@ -13,7 +13,7 @@ rosrun UArm servo2Dobot.py &
 PID1=$!
 
 
-# 运行servo_reader.py脚本
+# Run servo_reader.py script
 echo "servo_reader.py..."
 rosrun UArm servo_reader.py &
 PID2=$!
