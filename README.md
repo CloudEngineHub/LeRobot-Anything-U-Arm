@@ -182,6 +182,7 @@ If you are tired of DIY, contact business@evomind-tech.com for purchase.
 - **Yanwen Zou** - Hardware&Software System Design
 - **Zhaoye Zhou** - Hareware Assemble and Adjustment
 - **Chenyang Shi** - SAPIEN and website setup
+- **Jiaqi Lu** - Real-world Experiment
 - **Zewei Ye** - Real-world Experiment
 - **Jie Yi** - Real-world Experiment
 - **Junda Huang** - Idea Discussion and website setup
