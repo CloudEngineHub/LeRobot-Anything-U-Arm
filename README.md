@@ -175,7 +175,7 @@ We welcome contributions! Here's how you can help:
 ---
 
 ## 🔧 Order Link
-If you are tired of DIY, contact business@evomind-tech.com for purchase.
+If you are tired of DIY, contact business@evomind-tech.com or [WeChat Channel](https://mp.weixin.qq.com/s/MAXpcUTwSDWqV3MtgG_MqQ) for purchase.
 
 
 ## 👥 Contributors
