@@ -182,11 +182,6 @@ If you prefer not to use ROS communication, you can directly read the UArm’s s
 See this [`ARX example`](https://github.com/MINT-SJTU/LeRobot-Anything-U-Arm/blob/main/src/uarm/scripts/Follower_Arm/ARX/arx_teleop.py) for reference.
 
 
-## 🔧 Order Link
-If you are tired of DIY, buy it on [JD 京东链接](https://item.jd.com/10170154240149.html) or contact business@evomind-tech.com for purchase.
-Please note your Robotic Arm brand and model. 下单/咨询请注明使用的机械臂具体品牌型号。如有技术问题需要解答，请通过下方二维码进入社区群里咨询，京东上不便于回答讨论详细技术问题。
-
-
 ## 👥 Contributors
 
 - **Yanwen Zou** - Hardware&Software System Design
@@ -213,6 +208,13 @@ Thanks to all the talented contributors behind these detailed and professional p
 <img src="pics/uarm_community.jpg" width="200" />
 </div>
 ---
+
+## 🔧 Order
+If you are tired of DIY, buy it by contacting freeniannian (WeChat) for purchase. No oversea service. 
+Please note your Robotic Arm brand and model. 下单/咨询请注明使用的机械臂具体品牌型号。如有技术问题需要解答。请扫描社区二维码群里咨询，或者联系 freeniannian (WeChat) 拉群。
+<div align="center">
+<img src="pics/so101provider.jpg" width="200" />
+</div>
 
 <div align="center">
 
