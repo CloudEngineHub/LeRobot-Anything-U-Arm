@@ -113,7 +113,7 @@ For detail, see our technical report [here](https://arxiv.org/abs/2509.02437).
 | Configuration                                                                                                         | Compatible Robot Arms                                                                      | Status   |
 | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | -------- |
 | [**Config 1**](https://github.com/MINT-SJTU/LeRobot-Anything-U-Arm/tree/main/mechanical/Config1_STL) | Xarm6, Fanuc LR Mate 200iD, Trossen ALOHA, Agile PiPER, Realman RM65B, KUKA LBR iiSY Cobot | ✅ Ready |
-| [**Config 2**](https://github.com/MINT-SJTU/LeRobot-Anything-U-Arm/tree/main/mechanical/Config2_STL) | Dobot CR5, UR5, ARX R5*, AUBO i5, JAKA Zu7                                                 | ✅ Ready |
+| [**Config 2**](https://github.com/MINT-SJTU/LeRobot-Anything-U-Arm/tree/main/mechanical/Config2_STL) | Dobot CR Series, UR5 Series, ARX R5, AUBO i5, JAKA Zu Series FAIRINO FR Series                                                 | ✅ Ready |
 | [**Config 3**](https://github.com/MINT-SJTU/LeRobot-Anything-U-Arm/tree/main/mechanical/Config3_STL) | Franka FR3, Franka Emika Panda, Flexiv Rizon, Realman RM75B , Xarm7                               | ✅ Ready |
 
 > 💡 **This is only part of our supported robots! For more robots, you can compare their mechanical configuration with each U-Arm to confirm which one fits your need (in most cases it will).
