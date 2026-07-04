@@ -203,10 +203,10 @@ This project builds upon the excellent work of:
 - [XLeRobot](https://github.com/Vector-Wangel/XLeRobot) - Extended robot support
 - [Gello](https://github.com/wuphilipp/gello_mechanical/tree/main) - Hardware inspiration
 
-Thanks to all the talented contributors behind these detailed and professional projects! You are also welcomed to join our WeChat Community for discussion and questions:
-<div align="center">
-<img src="pics/uarm_community.jpg" width="200" />
-</div>
+Thanks to all the talented contributors behind these detailed and professional projects! 
+
+You are also welcomed to join our WeChat Community for discussion and questions by contacting freeniannian (WeChat) to get into the WeChat Group.
+
 ---
 
 ## 🔧 Order
