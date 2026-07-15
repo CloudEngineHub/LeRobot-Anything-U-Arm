@@ -1,0 +1,51 @@
+{
+  "_instructions": "servo_id is 0-7 and used once per arm; joint sign is 1 or -1; ROS 2 gripper direction and travel are calibrated from released and fully pressed trigger positions",
+  "left": {
+    "joints": [
+      {"joint_name": "openarm_left_joint1", "servo_id": 0, "sign": 1, "scale": 1.0, "home_deg": 0.0, "max_delta_deg": 30.0},
+      {"joint_name": "openarm_left_joint2", "servo_id": 1, "sign": 1, "scale": 1.0, "home_deg": 0.0, "max_delta_deg": 30.0},
+      {"joint_name": "openarm_left_joint3", "servo_id": 2, "sign": 1, "scale": 1.0, "home_deg": 0.0, "max_delta_deg": 30.0},
+      {"joint_name": "openarm_left_joint4", "servo_id": 3, "sign": 1, "scale": 1.0, "home_deg": 90.0, "max_delta_deg": 30.0},
+      {"joint_name": "openarm_left_joint5", "servo_id": 4, "sign": 1, "scale": 1.0, "home_deg": 0.0, "max_delta_deg": 30.0},
+      {"joint_name": "openarm_left_joint6", "servo_id": 5, "sign": 1, "scale": 1.0, "home_deg": 0.0, "max_delta_deg": 25.0},
+      {"joint_name": "openarm_left_joint7", "servo_id": 6, "sign": 1, "scale": 1.0, "home_deg": 0.0, "max_delta_deg": 30.0}
+    ],
+    "gripper": {
+      "servo_id": 7,
+      "sign": 1,
+      "m_per_deg": 0.00025,
+      "home_m": 0.022,
+      "max_delta_m": 0.022,
+      "open_m": 0.044,
+      "closed_m": 0.0,
+      "deadband_ratio": 0.05,
+      "minimum_travel_deg": 10.0,
+      "hold_seconds": 0.75,
+      "stability_deg": 1.0
+    }
+  },
+  "right": {
+    "joints": [
+      {"joint_name": "openarm_right_joint1", "servo_id": 0, "sign": 1, "scale": 1.0, "home_deg": 0.0, "max_delta_deg": 30.0},
+      {"joint_name": "openarm_right_joint2", "servo_id": 1, "sign": 1, "scale": 1.0, "home_deg": 0.0, "max_delta_deg": 30.0},
+      {"joint_name": "openarm_right_joint3", "servo_id": 2, "sign": 1, "scale": 1.0, "home_deg": 0.0, "max_delta_deg": 30.0},
+      {"joint_name": "openarm_right_joint4", "servo_id": 3, "sign": 1, "scale": 1.0, "home_deg": 90.0, "max_delta_deg": 30.0},
+      {"joint_name": "openarm_right_joint5", "servo_id": 4, "sign": 1, "scale": 1.0, "home_deg": 0.0, "max_delta_deg": 30.0},
+      {"joint_name": "openarm_right_joint6", "servo_id": 5, "sign": 1, "scale": 1.0, "home_deg": 0.0, "max_delta_deg": 25.0},
+      {"joint_name": "openarm_right_joint7", "servo_id": 6, "sign": 1, "scale": 1.0, "home_deg": 0.0, "max_delta_deg": 30.0}
+    ],
+    "gripper": {
+      "servo_id": 7,
+      "sign": 1,
+      "m_per_deg": 0.00025,
+      "home_m": 0.022,
+      "max_delta_m": 0.022,
+      "open_m": 0.044,
+      "closed_m": 0.0,
+      "deadband_ratio": 0.05,
+      "minimum_travel_deg": 10.0,
+      "hold_seconds": 0.75,
+      "stability_deg": 1.0
+    }
+  }
+}
